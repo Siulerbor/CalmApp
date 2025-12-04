@@ -3,477 +3,1381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CalmDown - Tu Refugio Mental</title>
+    <title>Calma Digital - Bienestar con IA</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tone@14.9.14/build/Tone.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-        
-        * {
-            font-family: 'Poppins', sans-serif;
+        :root {
+            --primary: #4c7c7c;
+            --secondary: #6ee7b7;
+            --accent: #a5b4fc;
+            --danger: #fda4af;
+            --warning: #fcd34d;
+            --success: #34d399;
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
             min-height: 100vh;
         }
         
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
         
-        .breathing-circle {
-            animation: breathe 4s ease-in-out infinite;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
         }
         
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        
-        .float {
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        .wave {
-            animation: wave 3s ease-in-out infinite;
-        }
-        
-        @keyframes wave {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(10px); }
-        }
-        
-        .mood-btn {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .mood-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-        
-        .chat-bubble {
-            animation: slideIn 0.4s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .progress-ring {
-            transform: rotate(-90deg);
-        }
-        
-        .pulse-soft {
-            animation: pulseSoft 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulseSoft {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .sound-wave {
-            display: inline-block;
-            width: 4px;
-            height: 20px;
-            margin: 0 2px;
-            background: linear-gradient(to top, #667eea, #764ba2);
-            animation: soundWave 1s ease-in-out infinite;
-        }
-        
-        @keyframes soundWave {
-            0%, 100% { height: 10px; }
-            50% { height: 25px; }
-        }
-        
-        .tooltip {
-            position: relative;
-        }
-        
-        .tooltip:hover::after {
-            content: attr(data-tip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, #5a8f8f 100%);
             color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 124, 124, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #10b981 100%);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #fbbf24 100%);
+            color: #78350f;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #f87171 100%);
+            color: white;
+        }
+        
+        .mood-bar {
+            height: 8px;
+            border-radius: 4px;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid var(--primary);
             white-space: nowrap;
-            z-index: 1000;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-
-    <div id="app" class="max-w-7xl mx-auto">
+<body class="min-h-screen p-4 md:p-8">
+    <div id="app" class="max-w-6xl mx-auto">
         
-        <!-- Header con diseño más empático -->
-        <header class="text-center mb-8 glass-card p-8 rounded-3xl">
-            <div class="flex items-center justify-center gap-4 mb-4">
-                <div class="breathing-circle w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full"></div>
-                <h1 class="text-5xl font-bold gradient-text">CalmDown</h1>
-                <div class="breathing-circle w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full"></div>
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <div class="card glass-effect p-8 mb-6">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] mb-4">
+                    ✨ Calma Digital 🧘‍♀️
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 mb-2">Tu espacio para el bienestar mental y emocional</p>
+                <p class="text-sm text-gray-500">Conecta contigo mismo, reduce el estrés y encuentra equilibrio</p>
             </div>
-            <p class="text-lg text-gray-600 font-medium">Tu refugio personal de paz y bienestar</p>
-            <p class="text-sm text-gray-500 mt-2">Basado en neurociencia y psicología positiva</p>
-            <div id="user-info" class="text-xs text-gray-400 mt-3"></div>
-            <button id="start-audio-btn" class="mt-4 px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-full transition duration-300 shadow-lg hidden">
-                🎵 Activar Experiencia de Audio
-            </button>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <div class="flex items-center bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-user text-[var(--primary)] mr-2"></i>
+                    <span id="user-info" class="text-sm font-medium">Usuario: Calma_</span>
+                    <span id="user-id" class="ml-2 text-xs text-gray-500"></span>
+                </div>
+                <div class="flex items-center bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-calendar-alt text-[var(--primary)] mr-2"></i>
+                    <span id="current-date" class="text-sm font-medium"></span>
+                </div>
+                <div class="flex items-center bg-white px-4 py-2 rounded-full shadow-sm">
+                    <i class="fas fa-brain text-[var(--primary)] mr-2"></i>
+                    <span class="text-sm font-medium">Bienestar: <span id="wellness-score">85</span>/100</span>
+                </div>
+            </div>
         </header>
 
-        <!-- Estado Mental Actual - Nuevo componente empático -->
-        <div class="glass-card p-6 rounded-3xl mb-8">
-            <h2 class="text-2xl font-bold text-center mb-4 gradient-text">¿Cómo te sientes en este momento?</h2>
-            <p class="text-center text-gray-600 text-sm mb-6">Reconocer tus emociones es el primer paso hacia el bienestar</p>
+        <!-- Main App Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <button onclick="quickMoodLog('Tranquilo')" class="mood-btn glass-card p-6 rounded-2xl text-center">
-                    <div class="text-5xl mb-2">😌</div>
-                    <p class="font-semibold text-gray-700">Tranquilo</p>
-                    <p class="text-xs text-gray-500">En paz</p>
-                </button>
-                <button onclick="quickMoodLog('Feliz')" class="mood-btn glass-card p-6 rounded-2xl text-center">
-                    <div class="text-5xl mb-2">😊</div>
-                    <p class="font-semibold text-gray-700">Feliz</p>
-                    <p class="text-xs text-gray-500">Contento</p>
-                </button>
-                <button onclick="quickMoodLog('Ansioso')" class="mood-btn glass-card p-6 rounded-2xl text-center">
-                    <div class="text-5xl mb-2">😰</div>
-                    <p class="font-semibold text-gray-700">Ansioso</p>
-                    <p class="text-xs text-gray-500">Preocupado</p>
-                </button>
-                <button onclick="quickMoodLog('Estresado')" class="mood-btn glass-card p-6 rounded-2xl text-center">
-                    <div class="text-5xl mb-2">😓</div>
-                    <p class="font-semibold text-gray-700">Estresado</p>
-                    <p class="text-xs text-gray-500">Abrumado</p>
-                </button>
+            <!-- Left Column: Wellness Tools -->
+            <div class="space-y-6">
+                
+                <!-- Card 1: Guided Meditation Generator -->
+                <div class="card p-6 border-t-4 border-[var(--secondary)]">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-[var(--secondary)]/20 flex items-center justify-center mr-3">
+                            <i class="fas fa-headphones-alt text-[var(--secondary)]"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Meditación Guiada con IA 🎧</h2>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-6">Genera una meditación personalizada de 5 minutos. Elige tu tema preferido:</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <button class="meditation-option p-3 rounded-xl border border-gray-200 hover:border-[var(--secondary)] transition" data-theme="respiración">
+                            <i class="fas fa-wind text-[var(--primary)] mr-2"></i>
+                            <span class="font-medium">Respiración</span>
+                        </button>
+                        <button class="meditation-option p-3 rounded-xl border border-gray-200 hover:border-[var(--secondary)] transition" data-theme="relajación">
+                            <i class="fas fa-spa text-[var(--primary)] mr-2"></i>
+                            <span class="font-medium">Relajación</span>
+                        </button>
+                        <button class="meditation-option p-3 rounded-xl border border-gray-200 hover:border-[var(--secondary)] transition" data-theme="concentración">
+                            <i class="fas fa-bullseye text-[var(--primary)] mr-2"></i>
+                            <span class="font-medium">Concentración</span>
+                        </button>
+                        <button class="meditation-option p-3 rounded-xl border border-gray-200 hover:border-[var(--secondary)] transition" data-theme="ansiedad">
+                            <i class="fas fa-heart text-[var(--primary)] mr-2"></i>
+                            <span class="font-medium">Ansiedad</span>
+                        </button>
+                    </div>
+                    
+                    <button id="generate-meditation-btn" class="btn-primary w-full py-3">
+                        <i class="fas fa-magic mr-2"></i>
+                        Generar Meditación Personalizada
+                    </button>
+                    
+                    <div id="meditation-output" class="mt-6 p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 hidden fade-in">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-gray-800">Tu Meditación:</h3>
+                            <button id="play-audio-btn" class="text-sm bg-[var(--primary)] text-white px-3 py-1 rounded-lg">
+                                <i class="fas fa-play mr-1"></i> Reproducir
+                            </button>
+                        </div>
+                        
+                        <div id="audio-player" class="mb-4 hidden">
+                            <audio id="meditation-audio" controls class="w-full"></audio>
+                        </div>
+                        
+                        <div id="meditation-text" class="text-gray-700 whitespace-pre-wrap p-3 bg-white/70 rounded-lg max-h-60 overflow-y-auto"></div>
+                        
+                        <div class="flex justify-between mt-4 pt-3 border-t border-green-200">
+                            <button id="save-meditation-btn" class="text-sm text-[var(--primary)]">
+                                <i class="far fa-bookmark mr-1"></i> Guardar
+                            </button>
+                            <button id="share-meditation-btn" class="text-sm text-[var(--primary)]">
+                                <i class="fas fa-share-alt mr-1"></i> Compartir
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="meditation-loading" class="mt-4 text-center hidden">
+                        <div class="inline-flex items-center space-x-2 text-[var(--primary)]">
+                            <div class="w-5 h-5 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin"></div>
+                            <span>La IA está creando tu meditación única...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2: Mood Tracker -->
+                <div class="card p-6 border-t-4 border-[var(--accent)]">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-[var(--accent)]/20 flex items-center justify-center mr-3">
+                            <i class="fas fa-heart text-[var(--accent)]"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Registro de Ánimo Diario 💜</h2>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <p class="text-gray-600 mb-3">¿Cómo te sientes en este momento?</p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <button class="mood-btn px-4 py-2 rounded-full border transition" data-mood="excelente">
+                                <span class="mr-2">🥳</span> Excelente
+                            </button>
+                            <button class="mood-btn px-4 py-2 rounded-full border transition" data-mood="bien">
+                                <span class="mr-2">😊</span> Bien
+                            </button>
+                            <button class="mood-btn px-4 py-2 rounded-full border transition active:bg-blue-50 active:border-blue-300" data-mood="neutral">
+                                <span class="mr-2">😐</span> Neutral
+                            </button>
+                            <button class="mood-btn px-4 py-2 rounded-full border transition" data-mood="ansioso">
+                                <span class="mr-2">😟</span> Ansioso
+                            </button>
+                            <button class="mood-btn px-4 py-2 rounded-full border transition" data-mood="estresado">
+                                <span class="mr-2">😓</span> Estresado
+                            </button>
+                            <button class="mood-btn px-4 py-2 rounded-full border transition" data-mood="triste">
+                                <span class="mr-2">😔</span> Triste
+                            </button>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="mood-intensity" class="block text-sm font-medium text-gray-700 mb-2">
+                                Intensidad: <span id="intensity-value">5</span>/10
+                            </label>
+                            <input type="range" id="mood-intensity" min="1" max="10" value="5" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="mood-notes" class="block text-sm font-medium text-gray-700 mb-2">
+                                Notas (opcional):
+                            </label>
+                            <textarea id="mood-notes" rows="3" placeholder="¿Qué está influyendo en tu estado de ánimo hoy? Ej: Buen día de trabajo, dormí bien, discusión con amigo..." class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"></textarea>
+                        </div>
+                        
+                        <button id="save-mood-btn" class="btn-success w-full py-3">
+                            <i class="far fa-save mr-2"></i>
+                            Guardar Registro Emocional
+                        </button>
+                        
+                        <div id="mood-status" class="mt-3 text-center text-sm font-medium"></div>
+                    </div>
+                </div>
+                
+                <!-- Card 3: Digital Detox -->
+                <div class="card p-6 border-t-4 border-[var(--danger)]">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-[var(--danger)]/20 flex items-center justify-center mr-3">
+                            <i class="fas fa-mobile-alt text-[var(--danger)]"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Desconexión Digital 📵</h2>
+                    </div>
+                    
+                    <p class="text-gray-600 mb-6">Establece límites saludables con la tecnología para mejorar tu bienestar mental.</p>
+                    
+                    <div class="space-y-4 mb-6">
+                        <div class="flex items-center p-3 bg-red-50 rounded-xl">
+                            <input type="checkbox" id="detox-notifications" class="form-checkbox h-5 w-5 text-[var(--danger)] rounded">
+                            <label for="detox-notifications" class="ml-3 text-gray-700">
+                                Silenciar notificaciones no esenciales por 2 horas
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 bg-red-50 rounded-xl">
+                            <input type="checkbox" id="detox-evening" class="form-checkbox h-5 w-5 text-[var(--danger)] rounded">
+                            <label for="detox-evening" class="ml-3 text-gray-700">
+                                Sin pantallas 1 hora antes de dormir
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center p-3 bg-red-50 rounded-xl">
+                            <input type="checkbox" id="detox-meals" class="form-checkbox h-5 w-5 text-[var(--danger)] rounded">
+                            <label for="detox-meals" class="ml-3 text-gray-700">
+                                Comer sin dispositivos móviles
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="detox-custom" class="block text-sm font-medium text-gray-700 mb-2">
+                            Mi compromiso personalizado:
+                        </label>
+                        <input type="text" id="detox-custom" placeholder="Ej: Leer un libro en lugar de revisar redes sociales" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--danger)] focus:border-transparent">
+                    </div>
+                    
+                    <button id="save-detox-btn" class="btn-danger w-full py-3">
+                        <i class="fas fa-lock mr-2"></i>
+                        Activar Modo Desconexión
+                    </button>
+                    
+                    <div id="detox-timer" class="mt-4 p-4 bg-red-100 rounded-xl text-center hidden">
+                        <h4 class="font-bold text-red-800 mb-2">Modo Desconexión Activado ⏰</h4>
+                        <div id="timer-display" class="text-3xl font-bold text-red-800">02:00:00</div>
+                        <p class="text-sm text-red-600 mt-2">¡Disfruta de este tiempo libre de distracciones digitales!</p>
+                    </div>
+                </div>
             </div>
             
-            <div id="quick-mood-feedback" class="mt-4 text-center text-sm font-medium hidden"></div>
+            <!-- Right Column: Analytics & History -->
+            <div class="space-y-6">
+                
+                <!-- Card 4: Wellness Dashboard -->
+                <div class="card p-6 border-t-4 border-[var(--primary)]">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-[var(--primary)]/20 flex items-center justify-center mr-3">
+                            <i class="fas fa-chart-line text-[var(--primary)]"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Tu Tablero de Bienestar 📊</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-xl">
+                            <div class="text-sm text-blue-600 mb-1">Estado de Ánimo Promedio</div>
+                            <div class="text-2xl font-bold text-blue-800">7.2</div>
+                            <div class="text-xs text-blue-600">/10 esta semana</div>
+                        </div>
+                        
+                        <div class="bg-green-50 p-4 rounded-xl">
+                            <div class="text-sm text-green-600 mb-1">Días Consecutivos</div>
+                            <div class="text-2xl font-bold text-green-800">14</div>
+                            <div class="text-xs text-green-600">registrando tu estado</div>
+                        </div>
+                        
+                        <div class="bg-purple-50 p-4 rounded-xl">
+                            <div class="text-sm text-purple-600 mb-1">Meditaciones Completadas</div>
+                            <div class="text-2xl font-bold text-purple-800">8</div>
+                            <div class="text-xs text-purple-600">esta semana</div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-4 rounded-xl">
+                            <div class="text-sm text-yellow-600 mb-1">Horas Sin Pantallas</div>
+                            <div class="text-2xl font-bold text-yellow-800">12.5</div>
+                            <div class="text-xs text-yellow-600">esta semana</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="font-bold text-gray-700 mb-3">Distribución de Estados de Ánimo</h3>
+                        <div id="mood-chart" class="space-y-3">
+                            <!-- Mood bars will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <button id="analyze-mood-btn" class="btn-warning w-full py-3">
+                        <i class="fas fa-brain mr-2"></i>
+                        Obtener Análisis de IA
+                    </button>
+                    
+                    <div id="ai-analysis" class="mt-4 p-4 bg-yellow-50 rounded-xl border border-yellow-200 hidden fade-in">
+                        <h4 class="font-bold text-yellow-800 mb-2">
+                            <i class="fas fa-robot mr-2"></i> Insight de Calma Digital:
+                        </h4>
+                        <p id="analysis-text" class="text-yellow-900"></p>
+                    </div>
+                </div>
+                
+                <!-- Card 5: Mood History -->
+                <div class="card p-6 border-t-4 border-gray-400">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                                <i class="fas fa-history text-gray-600"></i>
+                            </div>
+                            <h2 class="text-2xl font-bold text-gray-800">Historial Emocional 📖</h2>
+                        </div>
+                        <select id="history-filter" class="p-2 border border-gray-300 rounded-lg text-sm">
+                            <option value="7">Últimos 7 días</option>
+                            <option value="30">Últimos 30 días</option>
+                            <option value="all">Todo el historial</option>
+                        </select>
+                    </div>
+                    
+                    <div id="mood-history" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                        <!-- Mood history entries will be generated here -->
+                        <div class="text-center p-8 text-gray-500">
+                            <i class="fas fa-clipboard-list text-4xl mb-4"></i>
+                            <p>¡Comienza a registrar tu estado de ánimo para ver tu historial aquí!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 6: Saved Meditations -->
+                <div class="card p-6 border-t-4 border-[var(--success)]">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 rounded-full bg-[var(--success)]/20 flex items-center justify-center mr-3">
+                            <i class="fas fa-bookmark text-[var(--success)]"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Meditaciones Guardadas 📚</h2>
+                    </div>
+                    
+                    <div id="saved-meditations" class="space-y-3">
+                        <div class="text-center p-6 text-gray-500">
+                            <i class="fas fa-book-open text-3xl mb-3"></i>
+                            <p>Guarda tus meditaciones favoritas para acceder a ellas fácilmente</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 7: Quick Tips -->
+                <div class="card p-6 border-t-4 border-indigo-400">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                            <i class="fas fa-lightbulb text-indigo-600"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">Consejo del Día 💡</h2>
+                    </div>
+                    
+                    <div id="daily-tip" class="p-4 bg-indigo-50 rounded-xl">
+                        <p class="text-indigo-900 font-medium">Practica la gratitud: Escribe 3 cosas por las que estés agradecido hoy. Este simple ejercicio puede mejorar significativamente tu perspectiva.</p>
+                    </div>
+                    
+                    <div class="flex justify-between mt-4">
+                        <button id="prev-tip" class="text-sm text-indigo-600">
+                            <i class="fas fa-chevron-left mr-1"></i> Anterior
+                        </button>
+                        <button id="next-tip" class="text-sm text-indigo-600">
+                            Siguiente <i class="fas fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- Grid Principal -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Columna 1: Respira Conmigo -->
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">🫁</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800">Respira Conmigo</h3>
-                        <p class="text-xs text-gray-500">Activa tu sistema nervioso parasimpático</p>
-                    </div>
-                </div>
-                
-                <div class="relative h-64 flex items-center justify-center mb-4">
-                    <div id="breathing-guide" class="absolute w-32 h-32 bg-gradient-to-br from-blue-400 to-purple-400 rounded-full opacity-70"></div>
-                    <p id="breathing-text" class="text-2xl font-bold text-gray-700 z-10 relative">Inhala</p>
-                </div>
-                
-                <button id="start-breathing-btn" class="w-full py-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg transition">
-                    Comenzar Ejercicio
-                </button>
-                
-                <div class="mt-4 p-4 bg-blue-50 rounded-xl">
-                    <p class="text-xs text-blue-800 leading-relaxed">
-                        <strong>Beneficio:</strong> La respiración consciente reduce el cortisol (hormona del estrés) hasta un 30% en solo 5 minutos.
-                    </p>
-                </div>
+        
+        <!-- Footer -->
+        <footer class="mt-10 pt-6 border-t border-gray-200 text-center">
+            <p class="text-gray-600">Calma Digital - Tu espacio para el bienestar mental 🌱</p>
+            <p class="text-sm text-gray-500 mt-2">Esta aplicación es una herramienta de apoyo. Si necesitas ayuda profesional, no dudes en buscarla.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-500 hover:text-[var(--primary)]"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-gray-500 hover:text-[var(--primary)]"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-gray-500 hover:text-[var(--primary)]"><i class="fab fa-instagram"></i></a>
             </div>
+        </footer>
+    </div>
 
-            <!-- Columna 2: Ejercicios Personalizados -->
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">🧘‍♀️</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800">Tu Guía Personal</h3>
-                        <p class="text-xs text-gray-500">Ejercicios creados por IA con voz</p>
-                    </div>
-                </div>
+    <!-- JavaScript -->
+    <script>
+        // App State
+        const appState = {
+            userId: `user_${Math.random().toString(36).substr(2, 9)}`,
+            currentMood: 'neutral',
+            moodIntensity: 5,
+            meditationTheme: 'respiración',
+            detoxActive: false,
+            detoxEndTime: null,
+            savedMeditations: [],
+            moodHistory: [],
+            wellnessTips: [
+                "Tómate 5 minutos para respirar profundamente. Inhala por 4 segundos, mantén por 7, exhala por 8.",
+                "Desconéctate de las redes sociales durante una hora al día. Notarás la diferencia en tu paz mental.",
+                "Escribe tus pensamientos en un diario antes de dormir. Ayuda a procesar el día y liberar tensiones.",
+                "Haz una caminata al aire libre. La naturaleza tiene un efecto calmante en la mente.",
+                "Practica el 'no' digital: No revises tu teléfono durante la primera hora después de despertar.",
+                "Establece un ritual nocturno sin pantallas: lectura, meditación o música relajante.",
+                "Practica la autocompasión: Habla contigo mismo como lo harías con un buen amigo.",
+                "Realiza estiramientos suaves cada 2 horas si trabajas frente a una pantalla.",
+                "Prueba la técnica 5-4-3-2-1: Nombra 5 cosas que ves, 4 que sientes, 3 que oyes, 2 que hueles, 1 que gustas.",
+                "Dedica 10 minutos al día a una actividad creativa sin presión por el resultado."
+            ],
+            currentTipIndex: 0
+        };
+
+        // Mood Configuration
+        const moodConfig = {
+            excelente: { color: '#10b981', emoji: '🥳', name: 'Excelente' },
+            bien: { color: '#34d399', emoji: '😊', name: 'Bien' },
+            neutral: { color: '#9ca3af', emoji: '😐', name: 'Neutral' },
+            ansioso: { color: '#fbbf24', emoji: '😟', name: 'Ansioso' },
+            estresado: { color: '#f97316', emoji: '😓', name: 'Estresado' },
+            triste: { color: '#3b82f6', emoji: '😔', name: 'Triste' }
+        };
+
+        // Meditation Themes
+        const meditationThemes = {
+            'respiración': {
+                title: 'Meditación de Respiración Consciente',
+                exercises: [
+                    `Encuentra una postura cómoda, ya sea sentado o acostado. Cierra suavemente los ojos.
+
+Inhala profundamente por la nariz, sintiendo cómo el aire llena tus pulmones. Exhala lentamente por la boca, liberando cualquier tensión.
+
+Concéntrate en el ritmo natural de tu respiración. No la fuerces, solo obsérvala.
+
+Si tu mente divaga, amablemente regresa tu atención a la respiración. Cada respiración es una oportunidad para empezar de nuevo.`,
+                    
+                    `Siéntate con la espalda recta pero relajada. Coloca una mano sobre tu pecho y la otra sobre tu abdomen.
+
+Inhala lentamente durante 4 segundos, sintiendo cómo se expande tu abdomen. Mantén la respiración por 7 segundos.
+
+Exhala completamente durante 8 segundos, sintiendo cómo se relaja tu cuerpo. Repite este ciclo 5 veces.
+
+Con cada exhalación, imagina que liberas preocupaciones y tensiones.`,
+                    
+                    `Acuéstate boca arriba con las piernas extendidas y los brazos a los lados.
+
+Respira normalmente por un minuto, simplemente notando cómo entra y sale el aire.
+
+Ahora, en cada inhalación, di mentalmente "calma". En cada exhalación, di "paz".
+
+Permanece con esta práctica por 3-5 minutos, permitiendo que tu cuerpo encuentre su ritmo natural.`
+                ]
+            },
+            'relajación': {
+                title: 'Relajación Muscular Progresiva',
+                exercises: [
+                    `Comenzaremos tensando y relajando cada grupo muscular. Empieza por tus pies.
+
+Aprieta los dedos de los pies durante 5 segundos, luego relájalos completamente por 10 segundos. Nota la diferencia.
+
+Sube a tus pantorrillas, tensa por 5, relaja por 10. Continúa con muslos, glúteos, abdomen, pecho, espalda.
+
+Termina con hombros, brazos, manos, cuello y rostro. Tu cuerpo ahora debería sentirse pesado y relajado.`,
+                    
+                    `Imagina que estás flotando sobre una nube suave y esponjosa. Siente cómo te sostiene completamente.
+
+Con cada respiración, la nube se vuelve más cómoda y acogedora. Permítete hundirte en ella.
+
+Visualiza cómo la tensión abandona tu cuerpo y se disuelve en el aire. Eres puro peso y relajación.
+
+Permanece aquí por unos minutos, disfrutando de esta sensación de descanso profundo.`
+                ]
+            },
+            'concentración': {
+                title: 'Meditación para Mejorar el Enfoque',
+                exercises: [
+                    `Elige un objeto simple frente a ti: una vela, una piedra, una planta. Obsérvalo detenidamente.
+
+Nota cada detalle: colores, formas, texturas, sombras. Mantén tu atención completamente en el objeto.
+
+Cuando tu mente divague (y lo hará), amablemente regresa tu atención al objeto. Sin juicios.
+
+Practica esto por 5 minutos. Cada vez que regresas tu atención, fortaleces tu músculo de concentración.`,
+                    
+                    `Siéntate cómodamente y respira normalmente. Ahora, cuenta tus respiraciones del 1 al 10.
+
+Inhalación 1, exhalación 1. Inhalación 2, exhalación 2. Continúa hasta 10, luego comienza de nuevo.
+
+Si pierdes la cuenta o tu mente divaga, simplemente regresa al 1. No hay fracaso, solo práctica.
+
+Este ejercicio entrena tu mente para mantenerse en una sola tarea: contar respiraciones.`
+                ]
+            },
+            'ansiedad': {
+                title: 'Meditación para Calmar la Ansiedad',
+                exercises: [
+                    `Reconoce la ansiedad sin luchar contra ella. Di mentalmente: "Estoy sintiendo ansiedad en este momento".
+
+Observa dónde la sientes en tu cuerpo. ¿Es en el pecho? ¿Estómago? ¿Garganta? Solo observa sin juzgar.
+
+Con cada exhalación, envía amabilidad a esa parte de tu cuerpo. "Está bien sentir esto".
+
+Imagina la ansiedad como una nube que pasa por el cielo de tu mente. No eres la nube, eres el cielo que la observa pasar.`,
+                    
+                    `Coloca ambas manos sobre tu corazón. Siente el calor de tus manos y el latido de tu corazón.
+
+Respira en este espacio entre tus manos. Con cada inhalación, di "estoy seguro/a". Con cada exhalación, "estoy tranquilo/a".
+
+Permanece aquí por varios minutos. La simple presencia de tus manos sobre el corazón activa tu sistema de calma natural.
+
+Cuando te sientas listo/a, baja lentamente las manos, manteniendo esa sensación de seguridad contigo.`
+                ]
+            }
+        };
+
+        // Initialize App
+        function initApp() {
+            // Set current date
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', options);
+            
+            // Set user ID
+            document.getElementById('user-id').textContent = appState.userId.substring(0, 8);
+            
+            // Load saved data
+            loadSavedData();
+            
+            // Set initial mood button as active
+            setActiveMood('neutral');
+            
+            // Set initial meditation theme
+            setActiveMeditationTheme('respiración');
+            
+            // Display current wellness tip
+            displayWellnessTip();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Update dashboard
+            updateDashboard();
+            
+            console.log('Calma Digital iniciada correctamente');
+        }
+
+        // Load saved data from localStorage
+        function loadSavedData() {
+            try {
+                const savedMoods = localStorage.getItem('calma_digital_moods');
+                const savedMeditations = localStorage.getItem('calma_digital_meditations');
                 
-                <div class="space-y-3 mb-4">
-                    <div class="tooltip" data-tip="Reduce ansiedad un 45%">
-                        <button onclick="selectExercise('respiracion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 rounded-xl text-left transition">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">🌬️</span>
-                                <div>
-                                    <p class="font-semibold text-gray-800">Respiración Profunda</p>
-                                    <p class="text-xs text-gray-600">5 min • Ansiedad</p>
-                                </div>
+                if (savedMoods) {
+                    appState.moodHistory = JSON.parse(savedMoods);
+                }
+                
+                if (savedMeditations) {
+                    appState.savedMeditations = JSON.parse(savedMeditations);
+                    renderSavedMeditations();
+                }
+                
+                // Check for active detox timer
+                const detoxEnd = localStorage.getItem('calma_digital_detox_end');
+                if (detoxEnd && new Date(detoxEnd) > new Date()) {
+                    appState.detoxActive = true;
+                    appState.detoxEndTime = new Date(detoxEnd);
+                    startDetoxTimer();
+                }
+            } catch (error) {
+                console.error('Error loading saved data:', error);
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Mood buttons
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const mood = this.getAttribute('data-mood');
+                    setActiveMood(mood);
+                });
+            });
+            
+            // Mood intensity slider
+            const intensitySlider = document.getElementById('mood-intensity');
+            const intensityValue = document.getElementById('intensity-value');
+            intensitySlider.addEventListener('input', function() {
+                intensityValue.textContent = this.value;
+                appState.moodIntensity = parseInt(this.value);
+            });
+            
+            // Save mood button
+            document.getElementById('save-mood-btn').addEventListener('click', saveMoodEntry);
+            
+            // Meditation options
+            document.querySelectorAll('.meditation-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const theme = this.getAttribute('data-theme');
+                    setActiveMeditationTheme(theme);
+                });
+            });
+            
+            // Generate meditation button
+            document.getElementById('generate-meditation-btn').addEventListener('click', generateMeditation);
+            
+            // Play audio button
+            document.getElementById('play-audio-btn')?.addEventListener('click', playMeditationAudio);
+            
+            // Save meditation button
+            document.getElementById('save-meditation-btn')?.addEventListener('click', saveMeditation);
+            
+            // Share meditation button
+            document.getElementById('share-meditation-btn')?.addEventListener('click', shareMeditation);
+            
+            // Save detox button
+            document.getElementById('save-detox-btn').addEventListener('click', activateDigitalDetox);
+            
+            // Analyze mood button
+            document.getElementById('analyze-mood-btn').addEventListener('click', analyzeMoodPatterns);
+            
+            // History filter
+            document.getElementById('history-filter').addEventListener('change', renderMoodHistory);
+            
+            // Wellness tip navigation
+            document.getElementById('prev-tip').addEventListener('click', () => navigateTip(-1));
+            document.getElementById('next-tip').addEventListener('click', () => navigateTip(1));
+        }
+
+        // Set active mood
+        function setActiveMood(mood) {
+            appState.currentMood = mood;
+            
+            // Update UI
+            document.querySelectorAll('.mood-btn').forEach(btn => {
+                const btnMood = btn.getAttribute('data-mood');
+                if (btnMood === mood) {
+                    btn.style.backgroundColor = moodConfig[mood].color + '20';
+                    btn.style.borderColor = moodConfig[mood].color;
+                    btn.style.color = moodConfig[mood].color;
+                } else {
+                    btn.style.backgroundColor = '';
+                    btn.style.borderColor = '#e5e7eb';
+                    btn.style.color = '#374151';
+                }
+            });
+        }
+
+        // Set active meditation theme
+        function setActiveMeditationTheme(theme) {
+            appState.meditationTheme = theme;
+            
+            // Update UI
+            document.querySelectorAll('.meditation-option').forEach(option => {
+                if (option.getAttribute('data-theme') === theme) {
+                    option.style.borderColor = 'var(--secondary)';
+                    option.style.backgroundColor = 'rgba(110, 231, 183, 0.1)';
+                } else {
+                    option.style.borderColor = '#e5e7eb';
+                    option.style.backgroundColor = '';
+                }
+            });
+        }
+
+        // Save mood entry
+        function saveMoodEntry() {
+            const notes = document.getElementById('mood-notes').value.trim();
+            const moodEntry = {
+                mood: appState.currentMood,
+                intensity: appState.moodIntensity,
+                notes: notes,
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString('es-ES')
+            };
+            
+            appState.moodHistory.unshift(moodEntry);
+            
+            // Limit to last 50 entries
+            if (appState.moodHistory.length > 50) {
+                appState.moodHistory = appState.moodHistory.slice(0, 50);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('calma_digital_moods', JSON.stringify(appState.moodHistory));
+            
+            // Update UI
+            document.getElementById('mood-status').textContent = '✅ Estado de ánimo registrado exitosamente';
+            document.getElementById('mood-status').style.color = 'var(--success)';
+            
+            // Clear notes
+            document.getElementById('mood-notes').value = '';
+            
+            // Update dashboard
+            updateDashboard();
+            renderMoodHistory();
+            
+            // Update wellness score
+            updateWellnessScore();
+            
+            // Hide status message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('mood-status').textContent = '';
+            }, 3000);
+            
+            // Play success sound (simulated)
+            playSuccessSound();
+        }
+
+        // Generate meditation
+        function generateMeditation() {
+            const btn = document.getElementById('generate-meditation-btn');
+            const loading = document.getElementById('meditation-loading');
+            const output = document.getElementById('meditation-output');
+            const textElement = document.getElementById('meditation-text');
+            const audioPlayer = document.getElementById('audio-player');
+            
+            // Show loading state
+            btn.disabled = true;
+            loading.classList.remove('hidden');
+            output.classList.add('hidden');
+            audioPlayer.classList.add('hidden');
+            
+            // Get meditation theme
+            const theme = meditationThemes[appState.meditationTheme];
+            const exercises = theme.exercises;
+            const randomExercise = exercises[Math.floor(Math.random() * exercises.length)];
+            
+            // Simulate AI generation delay
+            setTimeout(() => {
+                // Generate meditation text
+                const meditationText = `${theme.title}\n\n${randomExercise}\n\n💫 Duración: 5 minutos\n🌿 Beneficio: ${getMeditationBenefit(appState.meditationTheme)}\n✨ Consejo: ${getMeditationTip()}`;
+                
+                textElement.textContent = meditationText;
+                
+                // Update UI
+                loading.classList.add('hidden');
+                output.classList.remove('hidden');
+                btn.disabled = false;
+                
+                // Store current meditation
+                appState.currentMeditation = {
+                    theme: appState.meditationTheme,
+                    title: theme.title,
+                    text: meditationText,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Play success sound
+                playSuccessSound();
+            }, 1500);
+        }
+
+        // Get meditation benefit based on theme
+        function getMeditationBenefit(theme) {
+            const benefits = {
+                'respiración': 'Reduce el estrés y mejora la concentración',
+                'relajación': 'Libera tensión muscular y promueve el descanso',
+                'concentración': 'Aumenta la claridad mental y la productividad',
+                'ansiedad': 'Calma el sistema nervioso y reduce la preocupación'
+            };
+            return benefits[theme] || 'Promueve el bienestar general';
+        }
+
+        // Get random meditation tip
+        function getMeditationTip() {
+            const tips = [
+                'Practica en un espacio tranquilo y cómodo',
+                'No te juzgues si tu mente divaga, es normal',
+                'Usa auriculares para una experiencia más inmersiva',
+                'Puedes hacerlo en cualquier momento del día',
+                'La consistencia es más importante que la duración'
+            ];
+            return tips[Math.floor(Math.random() * tips.length)];
+        }
+
+        // Play meditation audio (simulated)
+        function playMeditationAudio() {
+            const audioPlayer = document.getElementById('audio-player');
+            const playBtn = document.getElementById('play-audio-btn');
+            
+            if (audioPlayer.classList.contains('hidden')) {
+                // Show audio player
+                audioPlayer.classList.remove('hidden');
+                playBtn.innerHTML = '<i class="fas fa-pause mr-1"></i> Pausar';
+                
+                // Simulate audio playback
+                setTimeout(() => {
+                    playBtn.innerHTML = '<i class="fas fa-play mr-1"></i> Reproducir';
+                    audioPlayer.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        // Save meditation
+        function saveMeditation() {
+            if (!appState.currentMeditation) return;
+            
+            appState.savedMeditations.unshift({
+                ...appState.currentMeditation,
+                savedAt: new Date().toISOString()
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('calma_digital_meditations', JSON.stringify(appState.savedMeditations));
+            
+            // Update UI
+            renderSavedMeditations();
+            
+            // Show confirmation
+            const saveBtn = document.getElementById('save-meditation-btn');
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-check mr-1"></i> ¡Guardada!';
+            saveBtn.style.color = 'var(--success)';
+            
+            setTimeout(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.style.color = '';
+            }, 2000);
+            
+            playSuccessSound();
+        }
+
+        // Share meditation
+        function shareMeditation() {
+            if (!appState.currentMeditation) return;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: appState.currentMeditation.title,
+                    text: 'He creado una meditación en Calma Digital. ¡Échale un vistazo!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                const textToCopy = `${appState.currentMeditation.title}\n\n${appState.currentMeditation.text.substring(0, 100)}...`;
+                navigator.clipboard.writeText(textToCopy);
+                
+                const shareBtn = document.getElementById('share-meditation-btn');
+                const originalText = shareBtn.innerHTML;
+                shareBtn.innerHTML = '<i class="fas fa-check mr-1"></i> ¡Copiada!';
+                
+                setTimeout(() => {
+                    shareBtn.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            playSuccessSound();
+        }
+
+        // Activate digital detox
+        function activateDigitalDetox() {
+            const customGoal = document.getElementById('detox-custom').value.trim();
+            const detoxTimer = document.getElementById('detox-timer');
+            const checkboxes = [
+                document.getElementById('detox-notifications'),
+                document.getElementById('detox-evening'),
+                document.getElementById('detox-meals')
+            ];
+            
+            // Check if at least one option is selected
+            const hasSelection = checkboxes.some(cb => cb.checked) || customGoal;
+            
+            if (!hasSelection) {
+                alert('Por favor, selecciona al menos una opción o escribe un compromiso personalizado.');
+                return;
+            }
+            
+            // Set detox end time (2 hours from now)
+            appState.detoxEndTime = new Date(Date.now() + 2 * 60 * 60 * 1000);
+            appState.detoxActive = true;
+            
+            // Save to localStorage
+            localStorage.setItem('calma_digital_detox_end', appState.detoxEndTime.toISOString());
+            
+            // Show timer
+            detoxTimer.classList.remove('hidden');
+            
+            // Start timer
+            startDetoxTimer();
+            
+            // Update wellness score
+            updateWellnessScore();
+            
+            playSuccessSound();
+        }
+
+        // Start detox timer
+        function startDetoxTimer() {
+            const timerDisplay = document.getElementById('timer-display');
+            
+            function updateTimer() {
+                if (!appState.detoxActive || !appState.detoxEndTime) return;
+                
+                const now = new Date();
+                const timeLeft = appState.detoxEndTime - now;
+                
+                if (timeLeft <= 0) {
+                    // Detox completed
+                    appState.detoxActive = false;
+                    document.getElementById('detox-timer').classList.add('hidden');
+                    localStorage.removeItem('calma_digital_detox_end');
+                    return;
+                }
+                
+                // Calculate hours, minutes, seconds
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                // Update display
+                timerDisplay.textContent = 
+                    `${hours.toString().padStart(2, '0')}:` +
+                    `${minutes.toString().padStart(2, '0')}:` +
+                    `${seconds.toString().padStart(2, '0')}`;
+                
+                // Continue updating every second
+                setTimeout(updateTimer, 1000);
+            }
+            
+            updateTimer();
+        }
+
+        // Analyze mood patterns
+        function analyzeMoodPatterns() {
+            if (appState.moodHistory.length < 3) {
+                document.getElementById('analysis-text').textContent = 
+                    'Necesitas al menos 3 registros de estado de ánimo para obtener un análisis significativo. ¡Sigue registrando cómo te sientes!';
+                document.getElementById('ai-analysis').classList.remove('hidden');
+                return;
+            }
+            
+            const analysisText = document.getElementById('analysis-text');
+            const analysisDiv = document.getElementById('ai-analysis');
+            const btn = document.getElementById('analyze-mood-btn');
+            
+            // Show loading state
+            btn.disabled = true;
+            analysisDiv.classList.add('hidden');
+            
+            // Simulate AI analysis delay
+            setTimeout(() => {
+                // Analyze recent moods (last 7 entries)
+                const recentMoods = appState.moodHistory.slice(0, 7);
+                
+                // Count moods
+                const moodCounts = {};
+                recentMoods.forEach(entry => {
+                    moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+                });
+                
+                // Calculate average intensity
+                const avgIntensity = recentMoods.reduce((sum, entry) => sum + entry.intensity, 0) / recentMoods.length;
+                
+                // Generate insights
+                const insights = generateMoodInsights(moodCounts, avgIntensity, recentMoods);
+                
+                // Display analysis
+                analysisText.textContent = insights;
+                analysisDiv.classList.remove('hidden');
+                btn.disabled = false;
+                
+                playSuccessSound();
+            }, 2000);
+        }
+
+        // Generate mood insights
+        function generateMoodInsights(moodCounts, avgIntensity, recentMoods) {
+            const dominantMood = Object.entries(moodCounts).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+            const dominantMoodName = moodConfig[dominantMood]?.name || dominantMood;
+            
+            const insights = [
+                `Tu estado de ánimo predominante recientemente ha sido: ${dominantMoodName}. `,
+                `La intensidad emocional promedio es ${avgIntensity.toFixed(1)}/10. `,
+                `Llevas ${appState.moodHistory.length} días registrando tu bienestar. `
+            ];
+            
+            // Add specific recommendations based on mood patterns
+            if (dominantMood === 'ansioso' || dominantMood === 'estresado') {
+                insights.push("Noto que hay momentos de tensión. Te recomiendo practicar más meditaciones de respiración y establecer límites digitales más firmes.");
+            } else if (dominantMood === 'excelente' || dominantMood === 'bien') {
+                insights.push("¡Excelente! Tu bienestar emocional se mantiene en un buen nivel. Sigue cultivando estas prácticas que te hacen sentir bien.");
+            } else if (avgIntensity < 4) {
+                insights.push("Tu intensidad emocional es baja, lo que puede indicar apatía. Prueba actividades que te generen alegría o propósito.");
+            } else if (avgIntensity > 7) {
+                insights.push("Experimentas emociones intensas. Recuerda que todas las emociones son válidas y temporales. La meditación puede ayudarte a navegarlas.");
+            }
+            
+            // Add time-based insight if we have enough data
+            if (recentMoods.length >= 5) {
+                const morningMoods = recentMoods.filter(m => {
+                    const hour = new Date(m.timestamp).getHours();
+                    return hour >= 6 && hour < 12;
+                }).length;
+                
+                const afternoonMoods = recentMoods.filter(m => {
+                    const hour = new Date(m.timestamp).getHours();
+                    return hour >= 12 && hour < 18;
+                }).length;
+                
+                if (morningMoods > afternoonMoods * 1.5) {
+                    insights.push("Parece que tus mañanas son más desafiantes. Considera establecer una rutina matutina relajante.");
+                }
+            }
+            
+            return insights.join('\n\n');
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            // Update mood chart
+            updateMoodChart();
+            
+            // Update stats
+            updateStats();
+        }
+
+        // Update mood chart
+        function updateMoodChart() {
+            const chartContainer = document.getElementById('mood-chart');
+            
+            if (appState.moodHistory.length === 0) {
+                chartContainer.innerHTML = '<p class="text-gray-500 text-center py-4">Registra tu estado de ánimo para ver estadísticas</p>';
+                return;
+            }
+            
+            // Get mood counts for last 7 entries
+            const recentMoods = appState.moodHistory.slice(0, 7);
+            const moodCounts = {};
+            
+            recentMoods.forEach(entry => {
+                moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+            });
+            
+            // Calculate percentages
+            const total = recentMoods.length;
+            chartContainer.innerHTML = '';
+            
+            Object.entries(moodCounts).forEach(([mood, count]) => {
+                const percentage = (count / total) * 100;
+                const config = moodConfig[mood];
+                
+                if (config) {
+                    const bar = document.createElement('div');
+                    bar.className = 'flex items-center';
+                    bar.innerHTML = `
+                        <div class="w-1/4 flex items-center">
+                            <span class="text-lg mr-2">${config.emoji}</span>
+                            <span class="text-sm font-medium">${config.name}</span>
+                        </div>
+                        <div class="flex-grow bg-gray-200 rounded-full overflow-hidden">
+                            <div class="mood-bar h-2 rounded-full" style="width: ${percentage}%; background-color: ${config.color};"></div>
+                        </div>
+                        <div class="w-16 text-right">
+                            <span class="text-xs font-medium">${percentage.toFixed(0)}%</span>
+                        </div>
+                    `;
+                    chartContainer.appendChild(bar);
+                }
+            });
+        }
+
+        // Update stats
+        function updateStats() {
+            // Update consecutive days
+            const consecutiveDays = calculateConsecutiveDays();
+            document.querySelector('.bg-green-50 .text-2xl').textContent = consecutiveDays;
+            
+            // Update meditation count (simulated)
+            const meditationCount = appState.savedMeditations.length + 3;
+            document.querySelector('.bg-purple-50 .text-2xl').textContent = meditationCount;
+            
+            // Update screen-free hours (simulated)
+            const screenFreeHours = (appState.moodHistory.length * 0.5 + (appState.detoxActive ? 2 : 0)).toFixed(1);
+            document.querySelector('.bg-yellow-50 .text-2xl').textContent = screenFreeHours;
+            
+            // Update average mood
+            if (appState.moodHistory.length > 0) {
+                const avgIntensity = appState.moodHistory
+                    .slice(0, 7)
+                    .reduce((sum, entry) => sum + entry.intensity, 0) / 
+                    Math.min(appState.moodHistory.length, 7);
+                document.querySelector('.bg-blue-50 .text-2xl').textContent = avgIntensity.toFixed(1);
+            }
+        }
+
+        // Calculate consecutive days
+        function calculateConsecutiveDays() {
+            if (appState.moodHistory.length === 0) return 0;
+            
+            let consecutive = 1;
+            const today = new Date().toDateString();
+            
+            for (let i = 0; i < appState.moodHistory.length - 1; i++) {
+                const currentDate = new Date(appState.moodHistory[i].timestamp).toDateString();
+                const nextDate = new Date(appState.moodHistory[i + 1].timestamp).toDateString();
+                
+                if (currentDate === nextDate) continue;
+                
+                const currentDay = new Date(appState.moodHistory[i].timestamp);
+                const nextDay = new Date(appState.moodHistory[i + 1].timestamp);
+                const diffDays = Math.floor((currentDay - nextDay) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 1) {
+                    consecutive++;
+                } else {
+                    break;
+                }
+            }
+            
+            return consecutive;
+        }
+
+        // Update wellness score
+        function updateWellnessScore() {
+            let score = 85; // Base score
+            
+            // Bonus for consistent tracking
+            if (appState.moodHistory.length >= 7) score += 5;
+            if (appState.moodHistory.length >= 14) score += 5;
+            
+            // Bonus for saved meditations
+            score += Math.min(appState.savedMeditations.length * 2, 10);
+            
+            // Bonus for active detox
+            if (appState.detoxActive) score += 5;
+            
+            // Cap at 100
+            score = Math.min(score, 100);
+            
+            document.getElementById('wellness-score').textContent = score;
+        }
+
+        // Render mood history
+        function renderMoodHistory() {
+            const historyContainer = document.getElementById('mood-history');
+            const filterValue = document.getElementById('history-filter').value;
+            
+            if (appState.moodHistory.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="text-center p-8 text-gray-500">
+                        <i class="fas fa-clipboard-list text-4xl mb-4"></i>
+                        <p>¡Comienza a registrar tu estado de ánimo para ver tu historial aquí!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Filter history
+            let filteredHistory = [...appState.moodHistory];
+            if (filterValue !== 'all') {
+                const days = parseInt(filterValue);
+                const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+                filteredHistory = filteredHistory.filter(entry => 
+                    new Date(entry.timestamp) >= cutoffDate
+                );
+            }
+            
+            // Clear container
+            historyContainer.innerHTML = '';
+            
+            // Add entries
+            filteredHistory.forEach((entry, index) => {
+                const config = moodConfig[entry.mood];
+                if (!config) return;
+                
+                const date = new Date(entry.timestamp);
+                const timeString = date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                const dateString = date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+                
+                const entryElement = document.createElement('div');
+                entryElement.className = 'p-4 bg-gray-50 rounded-xl border border-gray-200 fade-in';
+                entryElement.style.animationDelay = `${index * 0.05}s`;
+                
+                entryElement.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center mr-2" style="background-color: ${config.color}20; color: ${config.color}">
+                                ${config.emoji}
                             </div>
-                        </button>
-                    </div>
-                    
-                    <div class="tooltip" data-tip="Mejora concentración un 60%">
-                        <button onclick="selectExercise('meditacion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300 rounded-xl text-left transition">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">🧘</span>
-                                <div>
-                                    <p class="font-semibold text-gray-800">Meditación Mindfulness</p>
-                                    <p class="text-xs text-gray-600">7 min • Concentración</p>
-                                </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800">${config.name}</h4>
+                                <p class="text-xs text-gray-500">${dateString} • ${timeString}</p>
                             </div>
-                        </button>
+                        </div>
+                        <div class="text-sm font-medium" style="color: ${config.color}">
+                            Intensidad: ${entry.intensity}/10
+                        </div>
                     </div>
-                    
-                    <div class="tooltip" data-tip="Reduce tensión muscular un 70%">
-                        <button onclick="selectExercise('relajacion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-green-100 to-green-200 hover:from-green-200 hover:to-green-300 rounded-xl text-left transition">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">😌</span>
-                                <div>
-                                    <p class="font-semibold text-gray-800">Relajación Muscular</p>
-                                    <p class="text-xs text-gray-600">10 min • Tensión física</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                    
-                    <div class="tooltip" data-tip="Activa ondas theta del cerebro">
-                        <button onclick="selectExercise('visualizacion')" class="exercise-btn w-full p-4 bg-gradient-to-r from-pink-100 to-pink-200 hover:from-pink-200 hover:to-pink-300 rounded-xl text-left transition">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">🌄</span>
-                                <div>
-                                    <p class="font-semibold text-gray-800">Visualización Guiada</p>
-                                    <p class="text-xs text-gray-600">8 min • Calma profunda</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
+                    ${entry.notes ? `
+                        <div class="mt-2 p-2 bg-white rounded-lg border-l-2" style="border-left-color: ${config.color}">
+                            <p class="text-sm text-gray-700">${entry.notes}</p>
+                        </div>
+                    ` : ''}
+                `;
                 
-                <button id="generate-exercise-btn" class="w-full py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition" disabled>
-                    Generar Mi Guía 🎧
-                </button>
-                
-                <div id="exercise-output" class="mt-4 glass-card p-4 rounded-xl hidden">
-                    <audio id="audio-player" controls class="w-full mb-3"></audio>
-                    <p id="exercise-text" class="text-sm text-gray-700 leading-relaxed"></p>
-                </div>
-                
-                <div id="loading-indicator" class="mt-4 text-center hidden">
-                    <div class="flex items-center justify-center gap-2">
-                        <div class="sound-wave" style="animation-delay: 0s"></div>
-                        <div class="sound-wave" style="animation-delay: 0.2s"></div>
-                        <div class="sound-wave" style="animation-delay: 0.4s"></div>
-                        <div class="sound-wave" style="animation-delay: 0.6s"></div>
-                    </div>
-                    <p class="text-sm text-purple-600 mt-2 font-medium">Creando tu experiencia...</p>
-                </div>
-            </div>
+                historyContainer.appendChild(entryElement);
+            });
+        }
 
-            <!-- Columna 3: Sonidos de la Naturaleza -->
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">🎵</span>
+        // Render saved meditations
+        function renderSavedMeditations() {
+            const container = document.getElementById('saved-meditations');
+            
+            if (appState.savedMeditations.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-6 text-gray-500">
+                        <i class="fas fa-book-open text-3xl mb-3"></i>
+                        <p>Guarda tus meditaciones favoritas para acceder a ellas fácilmente</p>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800">Sonidos Terapéuticos</h3>
-                        <p class="text-xs text-gray-500">Basados en terapia de sonido</p>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            appState.savedMeditations.slice(0, 3).forEach((meditation, index) => {
+                const theme = meditationThemes[meditation.theme];
+                const date = new Date(meditation.savedAt);
+                const dateString = date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                
+                const meditationElement = document.createElement('div');
+                meditationElement.className = 'p-3 bg-green-50 rounded-xl border border-green-200 flex items-center justify-between';
+                
+                meditationElement.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                            <i class="fas fa-headphones-alt text-green-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">${meditation.title}</h4>
+                            <p class="text-xs text-gray-500">${dateString} • ${theme ? theme.title.split(' ')[0] : ''}</p>
+                        </div>
                     </div>
-                </div>
+                    <button class="play-meditation text-green-600" data-index="${index}">
+                        <i class="fas fa-play"></i>
+                    </button>
+                `;
                 
-                <audio id="ambient-audio" loop class="hidden"></audio>
-                
-                <div class="space-y-2 mb-4 max-h-96 overflow-y-auto">
-                    <button onclick="playAmbientSound('rain')" class="w-full p-3 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🌧️</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Lluvia Suave</p>
-                            <p class="text-xs text-gray-600">Reduce frecuencia cardíaca</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('ocean')" class="w-full p-3 bg-gradient-to-r from-cyan-50 to-blue-50 hover:from-cyan-100 hover:to-blue-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🌊</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Olas del Océano</p>
-                            <p class="text-xs text-gray-600">Induce ondas alfa</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('forest')" class="w-full p-3 bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🌲</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Bosque Tranquilo</p>
-                            <p class="text-xs text-gray-600">Efecto Shinrin-yoku</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('fireplace')" class="w-full p-3 bg-gradient-to-r from-orange-50 to-red-50 hover:from-orange-100 hover:to-red-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🔥</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Chimenea</p>
-                            <p class="text-xs text-gray-600">Sensación de calidez</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('birds')" class="w-full p-3 bg-gradient-to-r from-yellow-50 to-amber-50 hover:from-yellow-100 hover:to-amber-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🐦</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Pájaros</p>
-                            <p class="text-xs text-gray-600">Aumenta serotonina</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('classical')" class="w-full p-3 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🎻</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Música Clásica</p>
-                            <p class="text-xs text-gray-600">Efecto Mozart</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('meditation')" class="w-full p-3 bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🧘</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Meditación</p>
-                            <p class="text-xs text-gray-600">Ondas theta</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('tibetan')" class="w-full p-3 bg-gradient-to-r from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🔔</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Cuencos Tibetanos</p>
-                            <p class="text-xs text-gray-600">Vibración celular</p>
-                        </div>
-                    </button>
-                    
-                    <button onclick="playAmbientSound('piano')" class="w-full p-3 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 rounded-xl text-left transition flex items-center gap-3">
-                        <span class="text-2xl">🎹</span>
-                        <div class="flex-1">
-                            <p class="font-semibold text-gray-800 text-sm">Piano Relajante</p>
-                            <p class="text-xs text-gray-600">Balance emocional</p>
-                        </div>
-                    </button>
-                </div>
-                
-                <button onclick="stopAmbientSound()" class="w-full py-2 bg-red-100 hover:bg-red-200 text-red-700 font-semibold rounded-xl transition mb-3">
-                    ⏹️ Detener
-                </button>
-                
-                <div id="ambient-status" class="text-center text-sm p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl"></div>
-                
-                <div class="mt-3">
-                    <label class="block text-xs font-semibold text-gray-700 mb-2">Volumen</label>
-                    <input type="range" id="volume-slider" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg cursor-pointer">
-                </div>
-            </div>
+                container.appendChild(meditationElement);
+            });
+            
+            // Add event listeners to play buttons
+            container.querySelectorAll('.play-meditation').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    playSavedMeditation(index);
+                });
+            });
+        }
 
-        </div>
+        // Play saved meditation
+        function playSavedMeditation(index) {
+            if (appState.savedMeditations[index]) {
+                const meditation = appState.savedMeditations[index];
+                document.getElementById('meditation-text').textContent = meditation.text;
+                document.getElementById('meditation-output').classList.remove('hidden');
+                
+                // Scroll to meditation section
+                document.getElementById('meditation-output').scrollIntoView({ behavior: 'smooth' });
+                
+                playSuccessSound();
+            }
+        }
 
-        <!-- Segunda Fila: Chat y Tracking -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        // Display wellness tip
+        function displayWellnessTip() {
+            const tipElement = document.getElementById('daily-tip');
+            tipElement.innerHTML = `<p class="text-indigo-900 font-medium">${appState.wellnessTips[appState.currentTipIndex]}</p>`;
+        }
 
-            <!-- Chat Empático con IA -->
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center pulse-soft">
-                        <span class="text-2xl">💬</span>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-xl font-bold text-gray-800">Tu Compañero Empático</h3>
-                        <p class="text-xs text-gray-500">Escucha activa sin juicios • 100% privado</p>
-                    </div>
-                </div>
-                
-                <div class="mb-4 p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl">
-                    <label class="block text-xs font-semibold text-indigo-800 mb-2">Modelo de IA:</label>
-                    <select id="ai-model-select" class="w-full p-2 border border-indigo-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-indigo-400">
-                        <option value="openai">🤖 OpenAI (Conversacional)</option>
-                        <option value="deepseek">🧠 DeepSeek (Económico)</option>
-                    </select>
-                </div>
-                
-                <div id="openai-instructions" class="mb-3 p-3 bg-green-50 border border-green-200 rounded-xl text-xs">
-                    <p class="font-semibold text-green-800 mb-1">📝 Configura OpenAI:</p>
-                    <a href="https://platform.openai.com/api-keys" target="_blank" class="text-green-700 underline">platform.openai.com/api-keys</a>
-                </div>
-                
-                <div id="deepseek-instructions" class="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs hidden">
-                    <p class="font-semibold text-blue-800 mb-1">📝 Configura DeepSeek:</p>
-                    <a href="https://platform.deepseek.com" target="_blank" class="text-blue-700 underline">platform.deepseek.com</a>
-                </div>
-                
-                <div class="mb-4">
-                    <input type="password" id="ai-api-input" placeholder="sk-..." class="w-full p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400">
-                    <button id="save-api-key-btn" class="mt-2 w-full py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-semibold rounded-lg text-sm transition">
-                        Activar 🔑
-                    </button>
-                    <p id="api-status" class="text-xs mt-2 font-medium text-center"></p>
-                </div>
-                
-                <div id="chat-container" class="h-72 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 mb-4 space-y-3">
-                    <div class="text-center text-gray-400 text-sm">Configura tu API para comenzar...</div>
-                </div>
+        // Navigate between tips
+        function navigateTip(direction) {
+            appState.currentTipIndex += direction;
+            
+            // Wrap around
+            if (appState.currentTipIndex < 0) {
+                appState.currentTipIndex = appState.wellnessTips.length - 1;
+            } else if (appState.currentTipIndex >= appState.wellnessTips.length) {
+                appState.currentTipIndex = 0;
+            }
+            
+            displayWellnessTip();
+            playSuccessSound();
+        }
 
-                <div class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Comparte cómo te sientes..." class="flex-1 p-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-400" disabled>
-                    <button id="send-chat-btn" class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-bold rounded-xl transition disabled:opacity-50" disabled>
-                        Enviar
-                    </button>
-                </div>
-                <div id="chat-loading" class="mt-2 text-center text-sm text-indigo-600 hidden">
-                    <div class="flex items-center justify-center gap-1">
-                        <div class="sound-wave" style="height: 12px"></div>
-                        <div class="sound-wave" style="height: 12px; animation-delay: 0.2s"></div>
-                        <div class="sound-wave" style="height: 12px; animation-delay: 0.4s"></div>
-                    </div>
-                    <span class="text-xs">Escuchando...</span>
-                </div>
-            </div>
+        // Play success sound (simulated)
+        function playSuccessSound() {
+            // In a real app, you would use the Web Audio API or play an audio file
+            // For now, we'll just log to console
+            console.log('Play success sound');
+        }
 
-            <!-- Diario Emocional -->
-            <div class="glass-card p-6 rounded-3xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-                        <span class="text-2xl">📔</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-gray-800">Diario Emocional</h3>
-                        <p class="text-xs text-gray-500">Monitorea tu bienestar día a día</p>
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo describes tu día?</label>
-                    <select id="mood-select" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-400">
-                        <option value="Excelente">🥳 Excelente - Me siento increíble</option>
-                        <option value="Bien">😊 Bien - Todo fluye</option>
-                        <option value="Neutral">😐 Neutral - Un día más</option>
-                        <option value="Ansioso">😟 Ansioso - Algo preocupado</option>
-                        <option value="Estresado">😓 Estresado - Mucha presión</option>
-                        <option value="Triste">😔 Tr
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
