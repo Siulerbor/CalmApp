@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmDown - Bienestar con IA</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de Tone.js para sonidos de feedback -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.9.14/build/Tone.min.js"></script>
+    <!-- Configuración de la fuente Inter -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fefce8 0%, #fff7ed 50%, #fef3c7 100%); 
+        }
+        .mood-bar {
+            height: 10px;
+            border-radius: 9999px;
+            transition: width 0.5s ease-out;
+        }
+        .card-shadow {
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 5px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .text-dark-contrast {
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <!-- Sonidos ambientales (ocultos) -->
+    <audio id="rain-sound" loop style="display:none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-rain-ambience-112.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="forest-sound" loop style="display:none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-forest-ambience-573.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="waves-sound" loop style="display:none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-waves-on-a-rocky-coast-1238.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="app" class="max-w-4xl mx-auto">
+        
+        <!-- Header -->
+        <header class="text-center mb-8 bg-white p-8 rounded-3xl shadow-2xl card-shadow border-b-4 border-orange-500">
+            <h1 class="text-6xl font-black text-orange-600 mb-2">✨ CalmDown 🧘‍♀️</h1>
+            <p class="text-xl font-medium text-emerald-500">Tu remanso de paz para la mente y el espíritu.</p>
+            
+            <!-- Sonidos ambientales -->
+            <div class="mt-4 space-x-2">
+                <button id="rain-btn" class="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-full">
+                    🌧️ Lluvia
+                </button>
+                <button id="forest-btn" class="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 rounded-full">
+                    🌳 Bosque
+                </button>
+                <button id="waves-btn" class="px-4 py-2 bg-teal-100 hover:bg-teal-200 text-teal-700 rounded-full">
+                    🌊 Olas
+                </button>
+                <button id="stop-sounds" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full">
+                    ⏹️ Detener
+                </button>
+            </div>
+
+            <div id="user-info" class="text-sm text-gray-500 mt-3">
+                Sesión local activa
+            </div>
+        </header>
+
+        <!-- Contenedor Principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- Columna Izquierda -->
+            <div class="space-y-8">
+                
+                <!-- Card 1: Ejercicio de 5 Minutos -->
+                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-emerald-500">
+                    <h2 class="text-2xl font-extrabold text-emerald-600 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Pausa de Calma Rápida 🗣️
+                    </h2>
+                    <p class="text-gray-600 mb-4">Ejercicio guiado con voz del navegador.</p>
+                    
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Selecciona tipo:</label>
+                        <select id="exercise-type" class="w-full p-3 border rounded-xl">
+                            <option value="respiración">🧘 Respiración profunda</option>
+                            <option value="meditacion">🕊️ Meditación breve</option>
+                            <option value="relajacion">🌿 Relajación muscular</option>
+                            <option value="visualizacion">🌈 Visualización positiva</option>
+                        </select>
+                    </div>
+                    
+                    <button id="generate-exercise-btn" class="w-full py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl transition duration-300 shadow-lg">
+                        🎧 Generar y Escuchar
+                    </button>
+                    
+                    <div id="exercise-output" class="mt-4 p-5 bg-emerald-50 rounded-xl border border-emerald-300 hidden">
+                        <h3 class="font-bold text-emerald-800 mb-2">Tu Guía de Calma:</h3>
+                        <div class="flex space-x-2 mb-3">
+                            <button id="speak-btn" class="px-4 py-2 bg-blue-500 text-white rounded-lg">🔊 Escuchar</button>
+                            <button id="pause-btn" class="px-4 py-2 bg-yellow-500 text-white rounded-lg">⏸️ Pausar</button>
+                            <button id="stop-btn" class="px-4 py-2 bg-red-500 text-white rounded-lg">⏹️ Detener</button>
+                        </div>
+                        <p id="exercise-text" class="text-sm text-gray-700 whitespace-pre-wrap mt-4 border-t pt-4 border-emerald-200"></p>
+                    </div>
+
+                    <div id="loading-indicator" class="mt-4 text-center hidden">
+                        <div class="flex items-center justify-center space-x-2 text-emerald-700">
+                            <svg class="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span class="text-sm font-semibold">Preparando tu ejercicio...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2: Seguimiento de Ánimo -->
+                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-orange-500">
+                    <h2 class="text-2xl font-extrabold text-orange-600 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Diario de Ánimo de Hoy 🧡
+                    </h2>
+                    
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo te sientes hoy?</label>
+                    <div class="grid grid-cols-4 gap-2 mb-4">
+                        <button data-mood="Excelente" class="mood-btn p-3 bg-lime-100 hover:bg-lime-200 rounded-xl text-center">🥳</button>
+                        <button data-mood="Bien" class="mood-btn p-3 bg-green-100 hover:bg-green-200 rounded-xl text-center">😊</button>
+                        <button data-mood="Neutral" class="mood-btn p-3 bg-gray-100 hover:bg-gray-200 rounded-xl text-center">😐</button>
+                        <button data-mood="Ansioso" class="mood-btn p-3 bg-yellow-100 hover:bg-yellow-200 rounded-xl text-center">😟</button>
+                        <button data-mood="Estresado" class="mood-btn p-3 bg-orange-100 hover:bg-orange-200 rounded-xl text-center">😓</button>
+                        <button data-mood="Triste" class="mood-btn p-3 bg-blue-100 hover:bg-blue-200 rounded-xl text-center">😔</button>
+                        <button data-mood="Irritable" class="mood-btn p-3 bg-red-100 hover:bg-red-200 rounded-xl text-center">😠</button>
+                        <button data-mood="Cansado" class="mood-btn p-3 bg-purple-100 hover:bg-purple-200 rounded-xl text-center">😴</button>
+                    </div>
+                    
+                    <input type="text" id="selected-mood" class="hidden">
+                    
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Notas (opcional):</label>
+                    <textarea id="mood-notes" rows="2" placeholder="¿Qué te pasa por la cabeza hoy?" class="w-full p-3 border rounded-xl"></textarea>
+
+                    <button id="save-mood-btn" class="w-full py-3 mt-4 bg-orange-500 hover:bg-orange-600 text-white font-black rounded-xl transition duration-300 shadow-lg">
+                        💾 Guardar Registro
+                    </button>
+                    <p id="mood-status" class="text-sm text-center mt-2 font-bold"></p>
+                </div>
+
+                <!-- Card 3: Desconexión Digital -->
+                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-amber-400">
+                    <h2 class="text-2xl font-extrabold text-amber-600 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        Compromiso de Desconexión 📵
+                    </h2>
+                    
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Meta para hoy:</label>
+                    <input type="text" id="detox-goal" placeholder="Ej: No usar redes sociales después de las 8 PM" class="w-full p-3 border rounded-xl mb-4">
+
+                    <button id="save-detox-btn" class="w-full py-3 bg-amber-400 hover:bg-amber-500 text-amber-900 font-black rounded-xl transition duration-300 shadow-lg">
+                        🔒 Sellar Compromiso
+                    </button>
+                    <p id="detox-status" class="text-sm text-center mt-2 font-bold"></p>
+                </div>
+            </div>
+
+            <!-- Columna Derecha -->
+            <div class="space-y-8">
+
+                 <!-- Card 4: Resumen de Ánimo -->
+                 <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-sky-500">
+                    <h2 class="text-2xl font-extrabold text-sky-600 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 5-5m1 1a1 1 0 100-2 1 1 0 000 2z"></path></svg>
+                        Resumen de Ánimo 📈
+                    </h2>
+                    <div id="mood-chart-container" class="space-y-4 p-2">
+                        <p class="text-gray-400 text-sm">Selecciona tu estado de ánimo para ver estadísticas.</p>
+                    </div>
+                </div>
+                
+                <!-- Card 5: Análisis con IA -->
+                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-green-500">
+                    <h2 class="text-2xl font-extrabold text-green-600 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        Reflexión con IA 🧠
+                    </h2>
+                    <button id="analyze-mood-btn" class="w-full py-3 px-4 bg-green-500 hover:bg-green-600 text-white font-black rounded-xl transition duration-300 shadow-lg">
+                        ✨ Obtener Análisis
+                    </button>
+                    
+                    <div id="analysis-output" class="mt-4 p-5 bg-green-50 rounded-xl border border-green-300 hidden">
+                        <h3 class="font-bold text-green-800 mb-2">Insight de CalmDown:</h3>
+                        <p id="analysis-text" class="text-gray-700"></p>
+                    </div>
+                </div>
+
+                <!-- Card 6: Historial -->
+                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-gray-400">
+                    <h2 class="text-2xl font-extrabold text-gray-700 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Tu Historial 📖
+                    </h2>
+                    <div id="mood-history-list" class="space-y-3 max-h-60 overflow-y-auto">
+                        <p class="text-gray-500">Aún no hay registros.</p>
+                    </div>
+                </div>
+
+                <!-- Card 7: Compromiso -->
+                <div class="bg-white p-6 rounded-3xl shadow-xl card-shadow border-b-4 border-orange-500">
+                    <h2 class="text-2xl font-extrabold text-orange-600 mb-4 flex items-center">
+                        <svg class="w-7 h-7 mr-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Meta de Hoy 🎯
+                    </h2>
+                    <div id="detox-commitment-output" class="p-4 bg-orange-50 rounded-xl">
+                        <p class="text-gray-700">Establece tu primera meta.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script principal -->
+    <script>
+        // ============================================
+        // 1. SISTEMA DE SONIDOS AMBIENTALES
+        // ============================================
+        const rainSound = document.getElementById('rain-sound');
+        const forestSound = document.getElementById('forest-sound');
+        const wavesSound = document.getElementById('waves-sound');
+        let currentSound = null;
+
+        document.getElementById('rain-btn').addEventListener('click', () => {
+            stopAllSounds();
+            rainSound.play();
+            rainSound.volume = 0.3;
+            currentSound = rainSound;
+        });
+
+        document.getElementById('forest-btn').addEventListener('click', () => {
+            stopAllSounds();
+            forestSound.play();
+            forestSound.volume = 0.3;
+            currentSound = forestSound;
+        });
+
+        document.getElementById('waves-btn').addEventListener('click', () => {
+            stopAllSounds();
+            wavesSound.play();
+            wavesSound.volume = 0.3;
+            currentSound = wavesSound;
+        });
+
+        document.getElementById('stop-sounds').addEventListener('click', stopAllSounds);
+
+        function stopAllSounds() {
+            [rainSound, forestSound, wavesSound].forEach(sound => {
+                sound.pause();
+                sound.currentTime = 0;
+            });
+            currentSound = null;
+        }
+
+        // ============================================
+        // 2. SISTEMA DE VOZ (TEXT-TO-SPEECH NATIVO)
+        // ============================================
+        let speech = null;
+        let isSpeaking = false;
+
+        document.getElementById('speak-btn')?.addEventListener('click', speakExercise);
+        document.getElementById('pause-btn')?.addEventListener('click', togglePause);
+        document.getElementById('stop-btn')?.addEventListener('click', stopSpeaking);
+
+        function speakExercise() {
+            const text = document.getElementById('exercise-text').textContent;
+            if (!text) return;
+            
+            stopSpeaking();
+            speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'es-ES';
+            speech.rate = 0.9;
+            speech.pitch = 1;
+            speech.volume = 1;
+            
+            speech.onstart = () => isSpeaking = true;
+            speech.onend = () => isSpeaking = false;
+            speech.onerror = () => isSpeaking = false;
+            
+            window.speechSynthesis.speak(speech);
+        }
+
+        function togglePause() {
+            if (isSpeaking) {
+                window.speechSynthesis.pause();
+            } else {
+                window.speechSynthesis.resume();
+            }
+            isSpeaking = !isSpeaking;
+        }
+
+        function stopSpeaking() {
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+        }
+
+        // ============================================
+        // 3. SISTEMA DE ÁNIMO (LOCALSTORAGE)
+        // ============================================
+        const moodColors = {
+            'Excelente': 'bg-lime-500', 'Bien': 'bg-green-500', 'Neutral': 'bg-gray-400',
+            'Ansioso': 'bg-yellow-400', 'Estresado': 'bg-orange-500', 'Triste': 'bg-sky-500',
+            'Irritable': 'bg-red-500', 'Cansado': 'bg-purple-500'
+        };
+        
+        const moodEmojis = {
+            'Excelente': '🥳', 'Bien': '😊', 'Neutral': '😐', 'Ansioso': '😟',
+            'Estresado': '😓', 'Triste': '😔', 'Irritable': '😠', 'Cansado': '😴'
+        };
+
+        // Selección de ánimo con botones
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const mood = this.getAttribute('data-mood');
+                document.getElementById('selected-mood').value = mood;
+                
+                // Efecto visual
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('ring-2', 'ring-offset-2'));
+                this.classList.add('ring-2', 'ring-offset-2', 'ring-orange-500');
+                
+                // Sonido de confirmación
+                playBeep();
+            });
+        });
+
+        function playBeep() {
+            const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ');
+            audio.play().catch(() => {});
+        }
+
+        // Guardar estado de ánimo
+        document.getElementById('save-mood-btn').addEventListener('click', () => {
+            const mood = document.getElementById('selected-mood').value;
+            const notes = document.getElementById('mood-notes').value;
+            
+            if (!mood) {
+                document.getElementById('mood-status').textContent = '⚠️ Selecciona un estado de ánimo';
+                document.getElementById('mood-status').className = 'text-sm text-center mt-2 font-bold text-red-500';
+                return;
+            }
+            
+            const entry = {
+                mood,
+                notes,
+                date: new Date().toLocaleString(),
+                timestamp: Date.now()
+            };
+            
+            // Guardar en localStorage
+            let history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            history.unshift(entry);
+            if (history.length > 100) history = history.slice(0, 100);
+            localStorage.setItem('moodHistory', JSON.stringify(history));
+            
+            // Actualizar UI
+            document.getElementById('mood-status').textContent = '✅ Estado guardado correctamente';
+            document.getElementById('mood-status').className = 'text-sm text-center mt-2 font-bold text-green-500';
+            document.getElementById('mood-notes').value = '';
+            
+            // Actualizar gráfico e historial
+            updateMoodChart();
+            updateMoodHistory();
+            
+            setTimeout(() => {
+                document.getElementById('mood-status').textContent = '';
+            }, 3000);
+        });
+
+        // ============================================
+        // 4. SISTEMA DE EJERCICIOS
+        // ============================================
+        const exercises = {
+            respiración: `Vamos a hacer un ejercicio de respiración de 5 minutos.
+
+1. Siéntate cómodamente con la espalda recta.
+2. Cierra los ojos suavemente.
+3. Inhala profundamente por la nariz durante 4 segundos.
+4. Aguanta la respiración durante 2 segundos.
+5. Exhala lentamente por la boca durante 6 segundos.
+6. Repite este ciclo 10 veces.
+
+Concéntrate en el sonido de tu respiración.
+Si tu mente divaga, vuelve suavemente a contar.`,
+            
+            meditacion: `Meditación de atención plena de 5 minutos.
+
+1. Encuentra una postura cómoda.
+2. Cierra los ojos y lleva tu atención a tu cuerpo.
+3. Observa cualquier sensación sin juzgarla.
+4. Lleva tu atención a tu respiración natural.
+5. Cuando notes que tu mente divaga, reconócelo con amabilidad.
+6. Regresa suavemente a la respiración.
+
+No hay manera correcta o incorrecta de hacer esto.
+Sé amable contigo mismo.`,
+            
+            relajacion: `Relajación muscular progresiva.
+
+1. Comienza por tus pies. Tensa los músculos durante 5 segundos.
+2. Relájalos completamente por 10 segundos.
+3. Sube a tus pantorrillas, tensa y relaja.
+4. Sigue con muslos, glúteos, abdomen, pecho.
+5. Tensa y relaja manos, brazos, hombros.
+6. Termina con cuello y rostro.
+
+Nota la diferencia entre tensión y relajación.`,
+            
+            visualizacion: `Visualización de un lugar seguro.
+
+1. Imagina un lugar donde te sientas completamente seguro.
+2. Puede ser real o imaginario.
+3. Observa los colores, sonidos y olores.
+4. Siente la temperatura del aire.
+5. Nota cómo tu cuerpo se relaja en este lugar.
+6. Permanece aquí unos minutos.
+
+Este lugar está siempre disponible para ti.`
+        };
+
+        document.getElementById('generate-exercise-btn').addEventListener('click', () => {
+            const type = document.getElementById('exercise-type').value;
+            const text = exercises[type];
+            
+            if (!text) return;
+            
+            document.getElementById('exercise-text').textContent = text;
+            document.getElementById('exercise-output').classList.remove('hidden');
+            
+            // Mostrar loading
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('loading-indicator').classList.add('hidden');
+                // Auto-iniciar voz después de 1 segundo
+                setTimeout(speakExercise, 1000);
+            }, 1500);
+        });
+
+        // ============================================
+        // 5. SISTEMA DE DESCONEXIÓN
+        // ============================================
+        document.getElementById('save-detox-btn').addEventListener('click', () => {
+            const goal = document.getElementById('detox-goal').value.trim();
+            
+            if (!goal) {
+                document.getElementById('detox-status').textContent = '⚠️ Escribe una meta primero';
+                document.getElementById('detox-status').className = 'text-sm text-center mt-2 font-bold text-red-500';
+                return;
+            }
+            
+            const commitment = {
+                goal,
+                date: new Date().toLocaleDateString(),
+                completed: false
+            };
+            
+            localStorage.setItem('detoxCommitment', JSON.stringify(commitment));
+            
+            document.getElementById('detox-status').textContent = '✅ Compromiso guardado';
+            document.getElementById('detox-status').className = 'text-sm text-center mt-2 font-bold text-green-500';
+            updateDetoxCommitment();
+            
+            setTimeout(() => {
+                document.getElementById('detox-status').textContent = '';
+            }, 3000);
+        });
+
+        // ============================================
+        // 6. SISTEMA DE ANÁLISIS CON IA SIMULADA
+        // ============================================
+        document.getElementById('analyze-mood-btn').addEventListener('click', () => {
+            const history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            
+            if (history.length < 2) {
+                document.getElementById('analysis-text').textContent = 'Necesitas al menos 2 registros para obtener un análisis. ¡Sigue registrando tu estado de ánimo!';
+                document.getElementById('analysis-output').classList.remove('hidden');
+                return;
+            }
+            
+            // Análisis simple basado en patrones
+            const moods = history.map(h => h.mood);
+            const lastMood = moods[0];
+            const prevMood = moods[1] || lastMood;
+            
+            const insights = [
+                `Veo que hoy te sientes ${lastMood.toLowerCase()}. Comparado con ayer (${prevMood.toLowerCase()}), ${getComparison(lastMood, prevMood)} Recuerda que todos los estados son temporales.`,
+                `Tu estado actual (${lastMood.toLowerCase()}) es una parte natural de tu proceso. ${getEncouragement(lastMood)}`,
+                `Noto que estás ${lastMood.toLowerCase()} hoy. ${getSuggestion(lastMood)} Pequeños pasos cada día crean grandes cambios.`,
+                `Observo un patrón de ${lastMood.toLowerCase()} en tu registro reciente. Esto puede indicar que ${getPatternInsight(lastMood)}`
+            ];
+            
+            const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+            
+            document.getElementById('analysis-text').textContent = randomInsight;
+            document.getElementById('analysis-output').classList.remove('hidden');
+        });
+
+        function getComparison(current, previous) {
+            if (current === previous) return "mantienes una consistencia emocional.";
+            if (['Excelente', 'Bien'].includes(current) && ['Ansioso', 'Estresado', 'Triste'].includes(previous)) 
+                return "¡has mostrado una mejora significativa!";
+            if (['Ansioso', 'Estresado', 'Triste'].includes(current) && ['Excelente', 'Bien'].includes(previous)) 
+                return "estás experimentando un cambio temporal.";
+            return "hay una variación natural en tu estado emocional.";
+        }
+
+        function getEncouragement(mood) {
+            const encouragements = {
+                'Excelente': '¡Aprovecha esta energía positiva!',
+                'Bien': 'Mantén ese equilibrio interior.',
+                'Neutral': 'La neutralidad es un espacio de observación.',
+                'Ansioso': 'La ansiedad es información, no identidad.',
+                'Estresado': 'El estrés indica que algo importa.',
+                'Triste': 'La tristeza limpia el alma.',
+                'Irritable': 'La irritabilidad señala necesidades no atendidas.',
+                'Cansado': 'El cansancio pide descanso, no juicio.'
+            };
+            return encouragements[mood] || 'Cada estado tiene su propósito.';
+        }
+
+        // ============================================
+        // 7. FUNCIONES DE VISUALIZACIÓN
+        // ============================================
+        function updateMoodChart() {
+            const history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            const container = document.getElementById('mood-chart-container');
+            
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-gray-400 text-sm p-2">Selecciona tu estado de ánimo para ver estadísticas.</p>';
+                return;
+            }
+            
+            // Contar frecuencias
+            const counts = {};
+            history.forEach(entry => {
+                counts[entry.mood] = (counts[entry.mood] || 0) + 1;
+            });
+            
+            const total = history.length;
+            container.innerHTML = '';
+            
+            Object.entries(counts).forEach(([mood, count]) => {
+                const percentage = ((count / total) * 100).toFixed(1);
+                const colorClass = moodColors[mood] || 'bg-gray-400';
+                const emoji = moodEmojis[mood] || '❓';
+                
+                const item = document.createElement('div');
+                item.className = 'flex items-center space-x-2';
+                item.innerHTML = `
+                    <span class="text-sm font-semibold w-1/3">${emoji} ${mood}</span>
+                    <div class="flex-grow bg-gray-200 rounded-full h-3">
+                        <div class="mood-bar ${colorClass} h-3 rounded-full" style="width: ${percentage}%"></div>
+                    </div>
+                    <span class="text-xs text-gray-600 w-12">${percentage}%</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function updateMoodHistory() {
+            const history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+            const container = document.getElementById('mood-history-list');
+            
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-gray-500">Aún no hay registros.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            history.slice(0, 5).forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'p-3 bg-gray-50 rounded-xl border border-gray-200 hover:bg-gray-100 transition';
+                item.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg">${moodEmojis[entry.mood]} ${entry.mood}</span>
+                        <span class="text-xs text-gray-500">${entry.date.split(',')[0]}</span>
+                    </div>
+                    ${entry.notes ? `<p class="text-sm text-gray-600 mt-1">${entry.notes}</p>` : ''}
+                `;
+                container.appendChild(item);
+            });
+            
+            if (history.length > 5) {
+                const more = document.createElement('p');
+                more.className = 'text-sm text-gray-500 text-center';
+                more.textContent = `+${history.length - 5} registros más`;
+                container.appendChild(more);
+            }
+        }
+
+        function updateDetoxCommitment() {
+            const commitment = JSON.parse(localStorage.getItem('detoxCommitment') || 'null');
+            const container = document.getElementById('detox-commitment-output');
+            
+            if (!commitment) {
+                container.innerHTML = '<p class="text-gray-700">Establece tu primera meta.</p>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="${commitment.completed ? 'bg-green-100 border-green-300' : 'bg-orange-100 border-orange-300'} p-3 rounded-lg border">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold ${commitment.completed ? 'text-green-700' : 'text-orange-700'}">
+                            ${commitment.completed ? '✅ Completada' : '⏳ Pendiente'}
+                        </span>
+                        <span class="text-sm text-gray-500">${commitment.date}</span>
+                    </div>
+                    <p class="mt-2 text-gray-700">${commitment.goal}</p>
+                    <button id="toggle-complete" class="mt-2 px-3 py-1 ${commitment.completed ? 'bg-gray-200 text-gray-700' : 'bg-green-500 text-white'} rounded text-sm">
+                        ${commitment.completed ? 'Marcar pendiente' : 'Marcar completada'}
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('toggle-complete')?.addEventListener('click', () => {
+                commitment.completed = !commitment.completed;
+                localStorage.setItem('detoxCommitment', JSON.stringify(commitment));
+                updateDet
+
