@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -388,6 +387,44 @@
             margin: 5px 0;
             border-left: 3px solid var(--accent);
         }
+        
+        /* Cycle Counter Styles */
+        .cycle-counter {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .cycle-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            min-width: 80px;
+        }
+        
+        /* Responsive Improvements */
+        @media (max-width: 768px) {
+            .cycle-counter {
+                position: relative;
+                top: auto;
+                right: auto;
+                transform: none;
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .breathing-balloon-container {
+                height: 350px;
+            }
+            
+            .text-5xl, .text-6xl {
+                font-size: 2.5rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -404,7 +441,7 @@
                                 <i class="fas fa-heart text-[var(--primary)] text-xl"></i>
                             </div>
                             <div class="text-left">
-                                <!-- Texto eliminado como solicitaste -->
+                                <!-- Espacio para logo/título adicional -->
                             </div>
                         </div>
                         <div class="flex items-center space-x-2">
@@ -771,8 +808,18 @@
                                     <div id="breath-timer" class="text-4xl font-bold">--</div>
                                 </div>
                             </div>
+                            
+                            <!-- Contador de ciclo al costado derecho -->
+                            <div class="cycle-counter">
+                                <div class="cycle-box">
+                                    <div class="text-xs text-gray-600 mb-1">Ciclo</div>
+                                    <div id="breath-cycle" class="text-2xl font-bold text-[var(--primary)]">0</div>
+                                    <div class="text-xs text-gray-500">/30</div>
+                                </div>
+                            </div>
+                            
                             <div class="breathing-info">
-                                <div class="text-sm">ciclo <span id="breath-cycle">0</span>/30</div>
+                                <div class="text-sm">Método Wim Hof</div>
                             </div>
                         </div>
                         
@@ -885,7 +932,8 @@
             meditationStartTime: null,
             currentMeditationDuration: 0,
             stepStartTime: null,
-            stepRemainingTime: 0
+            stepRemainingTime: 0,
+            savedMeditations: []
         };
 
         // Mood Configuration with colors
@@ -1443,7 +1491,7 @@
                             detailed: true
                         },
                         { 
-                            text: 'Con cada ola que llega a la orilla, siente cómo la tensión abandona tu cuerpo... Imagina que las preocupaciones se van con el agua que retrocede...', 
+                            text: 'Con cada ola que llega a la orilla, siente cómo la tension abandona tu cuerpo... Imagina que las preocupaciones se van con el agua que retrocede...', 
                             duration: '2 minutos',
                             detailed: true
                         },
@@ -1935,7 +1983,6 @@
             
             const breathPhase = document.getElementById('breath-phase');
             const breathTimer = document.getElementById('breath-timer');
-            const breathCycle = document.getElementById('breath-cycle');
             const balloon = document.getElementById('breathing-balloon');
             
             let timer = 4; // 4 seconds for inhale/exhale
@@ -1944,7 +1991,7 @@
                 if (!appState.breathingActive) return;
                 
                 breathTimer.textContent = timer;
-                breathCycle.textContent = appState.breathCount;
+                document.getElementById('breath-cycle').textContent = appState.breathCount;
                 
                 if (timer > 0) {
                     timer--;
@@ -2470,6 +2517,211 @@
             oscillator2.start();
             oscillator1.stop(audioContext.currentTime + 0.8);
             oscillator2.stop(audioContext.currentTime + 0.8);
+        }
+
+        // Calendar display functions
+        function updateCalendarDisplay() {
+            const monthYear = document.getElementById('current-month');
+            const calendarDays = document.getElementById('calendar-days');
+            
+            const year = appState.currentJournalDate.getFullYear();
+            const month = appState.currentJournalDate.getMonth();
+            
+            // Set month/year display
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                               'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            monthYear.textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            
+            // Clear calendar
+            calendarDays.innerHTML = '';
+            
+            // Add day labels
+            const dayLabels = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+            dayLabels.forEach(label => {
+                const dayLabel = document.createElement('div');
+                dayLabel.className = 'text-center text-xs font-medium text-gray-500';
+                dayLabel.textContent = label;
+                calendarDays.appendChild(dayLabel);
+            });
+            
+            // Add empty cells for days before first day of month
+            const firstDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                const emptyDay = document.createElement('div');
+                calendarDays.appendChild(emptyDay);
+            }
+            
+            // Add days of month
+            const today = new Date();
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                const currentDate = new Date(year, month, day);
+                
+                // Check if today
+                if (currentDate.toDateString() === today.toDateString()) {
+                    dayElement.classList.add('selected');
+                }
+                
+                // Check if has journal entry
+                if (hasJournalEntry(currentDate)) {
+                    dayElement.classList.add('has-entry');
+                }
+                
+                // Add click event
+                dayElement.addEventListener('click', () => {
+                    selectCalendarDay(day);
+                });
+                
+                calendarDays.appendChild(dayElement);
+            }
+        }
+
+        function hasJournalEntry(date) {
+            const dateString = date.toISOString().split('T')[0];
+            return appState.savedJournals.some(entry => 
+                new Date(entry.date).toISOString().split('T')[0] === dateString
+            );
+        }
+
+        function selectCalendarDay(day) {
+            // Update selected day
+            document.querySelectorAll('.calendar-day').forEach(dayEl => {
+                dayEl.classList.remove('selected');
+            });
+            
+            const year = appState.currentJournalDate.getFullYear();
+            const month = appState.currentJournalDate.getMonth();
+            const selectedDate = new Date(year, month, day);
+            
+            // Find and select the clicked day
+            const dayElements = document.querySelectorAll('.calendar-day');
+            const clickedElement = Array.from(dayElements).find(el => 
+                el.textContent == day && el.classList.contains('calendar-day')
+            );
+            
+            if (clickedElement) {
+                clickedElement.classList.add('selected');
+                
+                // Check if there's a journal entry for this date
+                const journalEntry = appState.savedJournals.find(entry => {
+                    const entryDate = new Date(entry.date);
+                    return entryDate.getFullYear() === year &&
+                           entryDate.getMonth() === month &&
+                           entryDate.getDate() === day;
+                });
+                
+                if (journalEntry) {
+                    // Load journal entry
+                    document.getElementById('journal-title').value = journalEntry.title;
+                    document.getElementById('journal-entry').value = journalEntry.content;
+                    document.getElementById('journal-private').checked = journalEntry.private;
+                } else {
+                    // Clear fields for new entry
+                    document.getElementById('journal-title').value = '';
+                    document.getElementById('journal-entry').value = '';
+                    document.getElementById('journal-private').checked = false;
+                }
+            }
+        }
+
+        // AI Chat functions
+        function updateAIChatDisplay() {
+            const chatContainer = document.getElementById('ai-chat');
+            chatContainer.innerHTML = '';
+            
+            appState.aiConversation.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `ai-message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`;
+                messageDiv.innerHTML = `<strong>${msg.role === 'user' ? 'Tú' : 'CalmApp'}:</strong> ${msg.message}`;
+                chatContainer.appendChild(messageDiv);
+            });
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function startConversation() {
+            const questionInput = document.getElementById('ai-question');
+            const question = questionInput.value.trim();
+            const loadingDiv = document.getElementById('ai-loading');
+            
+            if (!question) {
+                alert('Por favor, escribe algo para compartir.');
+                return;
+            }
+            
+            // Add user message
+            appState.aiConversation.push({
+                role: 'user',
+                message: question
+            });
+            
+            updateAIChatDisplay();
+            
+            // Show loading
+            loadingDiv.classList.remove('hidden');
+            questionInput.disabled = true;
+            
+            // Clear input
+            questionInput.value = '';
+            
+            // Simulate AI thinking and generate response
+            setTimeout(() => {
+                const response = generateAIResponse(question);
+                
+                // Add AI response
+                appState.aiConversation.push({
+                    role: 'bot',
+                    message: response
+                });
+                
+                updateAIChatDisplay();
+                
+                // Hide loading
+                loadingDiv.classList.add('hidden');
+                questionInput.disabled = false;
+                
+                // Save conversation
+                saveUserData('conversation', appState.aiConversation);
+                
+                // Play success sound
+                playSuccessSound();
+            }, 2000);
+        }
+
+        function generateAIResponse(question) {
+            const lowerQuestion = question.toLowerCase();
+            
+            // Check for specific keywords and provide tailored responses
+            if (lowerQuestion.includes('triste') || lowerQuestion.includes('deprimido')) {
+                return `Entiendo que estés pasando por un momento difícil. La tristeza es una emoción humana válida. Te recomiendo que explores la meditación para ansiedad y escribas en tu diario sobre lo que estás sintiendo. Recuerda que esta emoción es temporal, como las nubes en el cielo. ¿Quieres hablar más sobre lo que te hace sentir así?`;
+            } else if (lowerQuestion.includes('ansioso') || lowerQuestion.includes('nervioso')) {
+                return `La ansiedad puede ser abrumadora, pero estoy aquí para ayudarte. Te sugiero probar el ejercicio de respiración Wim Hof o la meditación para ansiedad. Puedes empezar con 5 minutos de respiración consciente. ¿Has notado en qué parte de tu cuerpo sientes más la ansiedad?`;
+            } else if (lowerQuestion.includes('estresado') || lowerQuestion.includes('presión')) {
+                return `El estrés es una respuesta natural, pero cuando se prolonga puede afectar tu bienestar. Te recomiendo establecer límites digitales y practicar la meditación de relajación. Recuerda que cuidarte no es egoísta, es necesario. ¿Hay algo específico que esté causándote estrés en este momento?`;
+            } else if (lowerQuestion.includes('feliz') || lowerQuestion.includes('contento')) {
+                return `¡Me alegra mucho escuchar eso! Celebrar los momentos felices es tan importante como procesar los difíciles. Te animo a que escribas en tu diario sobre esta felicidad para recordarla en el futuro. ¿Quieres compartir qué te hace sentir feliz hoy?`;
+            } else if (lowerQuestion.includes('gracias') || lowerQuestion.includes('agradecido')) {
+                return `Gracias a ti por compartir tus sentimientos. La gratitud es una de las emociones más poderosas para el bienestar emocional. ¿Te gustaría practicar un ejercicio de gratitud hoy?`;
+            } else {
+                // Generic empathetic response
+                const responses = [
+                    `Gracias por compartir eso conmigo. Es importante reconocer y validar lo que sientes. ¿Te gustaría explorar alguna herramienta específica de CalmApp para manejar estas emociones?`,
+                    `Entiendo lo que compartes. Todos pasamos por momentos diversos en nuestra vida emocional. Estoy aquí para escucharte sin juicios. ¿Hay algo más que quieras agregar sobre cómo te sientes?`,
+                    `Aprecio tu honestidad al compartir esto. El primer paso hacia el bienestar es reconocer nuestras emociones. ¿Te interesaría probar una meditación guiada o escribir en tu diario sobre esto?`,
+                    `Gracias por confiar en mí con tus sentimientos. Cada emoción que experimentas es válida e importante. ¿Cómo crees que podrías cuidarte mejor hoy?`,
+                    `Escucho lo que dices y valido lo que sientes. A veces, solo hablar de lo que nos pasa puede aliviar la carga emocional. ¿Te sientes escuchado/a?`
+                ];
+                
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
         }
 
         // Initialize the app when DOM is loaded
