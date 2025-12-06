@@ -407,6 +407,21 @@
             color: #333;
         }
         
+        /* Estudio Styles */
+        .study-card {
+            border-left: 4px solid #8b5cf6;
+            background: linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%);
+        }
+        
+        .study-badge {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
         /* Responsive Improvements */
         @media (max-width: 768px) {
             .cycle-counter {
@@ -483,6 +498,10 @@
                                 <i class="fas fa-brain text-[var(--primary)] mr-2"></i>
                                 <span class="text-sm font-medium">Bienestar: <span id="wellness-score">85</span>/100</span>
                             </div>
+                            <button id="participate-study-btn" class="study-badge flex items-center click-sound">
+                                <i class="fas fa-flask mr-2"></i>
+                                Participar en Estudio
+                            </button>
                         </div>
                     </div>
                     
@@ -505,6 +524,10 @@
                     <div class="flex items-center bg-white/90 px-4 py-2 rounded-full shadow-sm">
                         <i class="fas fa-user text-[var(--primary)] mr-2"></i>
                         <span class="text-sm font-medium">Modo Universal</span>
+                    </div>
+                    <div class="flex items-center bg-purple-100 px-4 py-2 rounded-full shadow-sm">
+                        <i class="fas fa-chart-line text-purple-600 mr-2"></i>
+                        <span class="text-sm font-medium text-purple-700">Estudio Activo</span>
                     </div>
                 </div>
             </header>
@@ -607,16 +630,12 @@
                             </button>
                         </div>
                         
-                        <!-- Control de Voz para Meditación -->
-                        <div class="voice-controls mb-4">
-                            <button id="toggle-meditation-voice" class="voice-btn click-sound active">
-                                <i class="fas fa-microphone mr-2"></i>
-                                Voz Masculina Natural
-                            </button>
-                            <button id="test-meditation-voice" class="voice-btn click-sound" style="background: var(--accent);">
-                                <i class="fas fa-volume-up mr-2"></i>
-                                Probar Voz
-                            </button>
+                        <!-- Nota sobre TTS -->
+                        <div class="mb-4 p-3 bg-blue-50/70 rounded-lg">
+                            <p class="text-sm text-blue-700">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Las meditaciones usarán Text-to-Speech (TTS) con la voz de tu navegador
+                            </p>
                         </div>
                         
                         <button id="generate-meditation-btn" class="btn-primary w-full py-3 mb-4 click-sound">
@@ -902,54 +921,72 @@
                         </div>
                     </div>
                     
-                    <!-- Card 7: Conversemos hoy CON IA MEJORADA -->
-                    <div class="card p-6 border-t-4 border-teal-400">
+                    <!-- Card 7: Estudio Científico sobre Bienestar Digital -->
+                    <div class="card p-6 border-t-4 border-purple-400 study-card">
                         <div class="flex items-center mb-4">
-                            <div class="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center mr-3">
-                                <i class="fas fa-comments text-teal-600"></i>
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3">
+                                <i class="fas fa-flask text-purple-600"></i>
                             </div>
-                            <h2 class="text-2xl font-bold text-gray-800">Conversemos hoy 💬</h2>
+                            <h2 class="text-2xl font-bold text-gray-800">Estudio Científico 🔬</h2>
+                            <span class="study-badge ml-3">¡Participa!</span>
                         </div>
                         
-                        <p class="text-gray-700 mb-6">Cuéntame cómo te sientes. Estoy aquí para escucharte con comprensión y empatía.</p>
+                        <p class="text-gray-700 mb-4">Forma parte de nuestra investigación sobre bienestar digital y estrés percibido.</p>
                         
-                        <!-- Chat Container Mejorado -->
-                        <div class="chat-container neuro-chat mb-4" id="chat-container">
-                            <div class="chat-message assistant-message neuro-message">
-                                <strong>Asistente IA:</strong> ¡Hola! 👋 Soy tu asistente de bienestar emocional. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa, qué te gusta hacer, o simplemente conversar. ¿Cómo te sientes hoy?
+                        <div class="mb-4 p-3 bg-purple-50/70 rounded-lg">
+                            <h4 class="font-bold text-purple-800 mb-2">¿Qué estudiamos?</h4>
+                            <ul class="text-sm text-purple-700 space-y-1">
+                                <li>• Impacto de herramientas digitales en el estrés</li>
+                                <li>• Efectividad de meditaciones guiadas</li>
+                                <li>• Relación entre registro emocional y bienestar</li>
+                                <li>• Uso de diarios digitales para salud mental</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="font-bold text-gray-700 mb-2">Cuestionario PSS-10 (Estres Percibido)</h4>
+                            <p class="text-sm text-gray-600 mb-3">Escala validada internacionalmente para medir el estrés percibido.</p>
+                            
+                            <div class="space-y-3 mb-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-user text-purple-500 mr-2"></i>
+                                    <span class="text-sm">Datos demográficos básicos</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-clipboard-list text-purple-500 mr-2"></i>
+                                    <span class="text-sm">10 preguntas sobre estrés percibido</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-envelope text-purple-500 mr-2"></i>
+                                    <span class="text-sm">Seguimiento a 4 semanas (opcional)</span>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="mb-4">
-                            <label for="user-message" class="block text-sm font-medium text-gray-700 mb-2">
-                                Escribe tu mensaje:
-                            </label>
-                            <textarea id="user-message" rows="3" placeholder="Cuéntame cómo te sientes, qué te preocupa, qué te gusta hacer, o qué te hace feliz..." class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-400 focus:border-transparent"></textarea>
+                            <h4 class="font-bold text-gray-700 mb-2">Tu participación ayuda a:</h4>
+                            <ul class="text-sm text-gray-600 list-disc pl-5 space-y-1">
+                                <li>Avanzar en investigación sobre salud mental digital</li>
+                                <li>Mejorar herramientas como CalmApp</li>
+                                <li>Entender patrones de estrés en la población</li>
+                                <li>Desarrollar intervenciones más efectivas</li>
+                            </ul>
                         </div>
                         
-                        <div class="flex justify-between">
-                            <button id="send-message-btn" class="btn-primary px-6 py-3 click-sound">
-                                <i class="fas fa-paper-plane mr-2"></i>
-                                Enviar
+                        <div class="flex space-x-3">
+                            <button id="open-study-form" class="btn-primary flex-1 py-3 click-sound" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                                <i class="fas fa-file-alt mr-2"></i>
+                                Participar en el Estudio
                             </button>
-                            <button id="clear-chat-btn" class="px-4 py-3 border border-gray-300 rounded-lg click-sound">
-                                <i class="fas fa-trash-alt mr-2"></i>
-                                Limpiar
+                            <button id="study-info" class="px-4 py-3 border border-gray-300 rounded-lg click-sound">
+                                <i class="fas fa-info-circle mr-2"></i>
+                                Más Info
                             </button>
                         </div>
                         
-                        <div id="ai-loading" class="mt-4 text-center hidden">
-                            <div class="typing-indicator">
-                                <div class="typing-dot"></div>
-                                <div class="typing-dot"></div>
-                                <div class="typing-dot"></div>
-                                <span class="ml-2 text-gray-600">Asistente está pensando...</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4 text-xs text-gray-500">
-                            <i class="fas fa-lightbulb mr-1"></i> 
-                            <span id="chat-model-info">Chat inteligente con análisis emocional</span>
+                        <div class="mt-3 text-xs text-gray-500">
+                            <i class="fas fa-shield-alt mr-1"></i> 
+                            <span>Todos los datos son anónimos y confidenciales</span>
                         </div>
                     </div>
                 </div>
@@ -959,7 +996,58 @@
             <footer class="mt-10 pt-6 border-t border-gray-300 text-center">
                 <p class="text-gray-700">CalmApp - Cuidando tu bienestar emocional, un día a la vez <span class="text-red-500">♥</span></p>
                 <p class="text-sm text-gray-600 mt-2">Aplicación de uso universal sin fines de lucro - Tu bienestar es lo más importante</p>
+                <p class="text-xs text-purple-600 mt-1"><i class="fas fa-flask mr-1"></i> Estudio científico en curso - ¡Tu participación cuenta!</p>
             </footer>
+        </div>
+    </div>
+
+    <!-- Modal para información del estudio -->
+    <div id="study-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-800">Estudio Científico 🔬</h3>
+                <button id="close-study-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">Objetivo del estudio:</h4>
+                    <p class="text-sm text-gray-600">Evaluar la efectividad de herramientas digitales como CalmApp en la reducción del estrés percibido y la mejora del bienestar emocional.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">Metodología:</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Cuestionario inicial PSS-10</li>
+                        <li>• Uso de CalmApp por 4 semanas</li>
+                        <li>• Cuestionario de seguimiento</li>
+                        <li>• Análisis estadístico comparativo</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">Confidencialidad:</h4>
+                    <p class="text-sm text-gray-600">Todos los datos son completamente anónimos. No recopilamos información personal identificable.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-700 mb-2">Beneficios:</h4>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        <li>• Contribuyes a la investigación científica</li>
+                        <li>• Obtienes feedback sobre tu estrés percibido</li>
+                        <li>• Ayudas a mejorar herramientas de bienestar</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="go-to-study-form" class="btn-primary px-6 py-2 click-sound" style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                    <i class="fas fa-file-alt mr-2"></i>
+                    Ir al Formulario
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1005,7 +1093,8 @@
             breathingVoiceEnabled: true,
             meditationVoiceEnabled: true,
             wimHofVoice: null,
-            meditationMaleVoice: null
+            meditationVoice: null,
+            studyParticipation: false
         };
 
         // Mood Configuration with colors
@@ -1063,7 +1152,6 @@
         let voices = [];
         let currentSpeech = null;
         let wimHofSpeech = null;
-        let meditationSpeech = null;
 
         // Initialize App
         function initApp() {
@@ -1129,6 +1217,7 @@
                 const savedJournals = localStorage.getItem('calmapp_journals');
                 const savedChat = localStorage.getItem('calmapp_chat');
                 const savedDetox = localStorage.getItem('calmapp_detox');
+                const savedStudy = localStorage.getItem('calmapp_study');
                 
                 if (savedMoods) {
                     appState.moodHistory = JSON.parse(savedMoods);
@@ -1151,6 +1240,11 @@
                     appState.detoxChecks = JSON.parse(savedDetox);
                     updateDetoxCheckboxes();
                 }
+                
+                if (savedStudy) {
+                    appState.studyParticipation = JSON.parse(savedStudy);
+                    updateStudyBadge();
+                }
             } catch (error) {
                 console.error('Error loading user data:', error);
             }
@@ -1161,43 +1255,37 @@
             localStorage.setItem(`calmapp_${key}`, JSON.stringify(data));
         }
 
-        // Load TTS voices with male voice
+        // Load TTS voices
         function loadTTSVoices() {
             voices = speechSynthesis.getVoices();
             
-            // Find male voice for meditation and Wim Hof
-            const maleVoices = [
+            // Find Spanish voice for Wim Hof
+            const spanishVoices = [
                 'Microsoft Pablo Desktop - Spanish (Spain)',
                 'Google español (Spain)',
-                'Spanish Male',
+                'Spanish',
                 'es-ES-Standard-B',
                 'es-MX-Standard-B'
             ];
             
-            // Try to find preferred male voice
-            for (const preferred of maleVoices) {
+            // Try to find Spanish voice
+            for (const preferred of spanishVoices) {
                 const voice = voices.find(v => v.name.includes(preferred));
                 if (voice) {
-                    appState.meditationMaleVoice = voice;
                     appState.wimHofVoice = voice;
-                    console.log('Voz masculina seleccionada:', voice.name);
+                    appState.meditationVoice = voice;
+                    console.log('Voz seleccionada:', voice.name);
                     break;
                 }
             }
             
-            // Fallbacks
-            if (!appState.meditationMaleVoice) {
-                appState.meditationMaleVoice = voices.find(voice => 
-                    voice.lang.includes('es') && 
-                    (voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('hombre'))
-                ) || voices.find(voice => voice.lang.includes('es')) || voices[0];
+            // Fallback
+            if (!appState.meditationVoice) {
+                appState.meditationVoice = voices.find(voice => voice.lang.includes('es')) || voices[0];
             }
             
             if (!appState.wimHofVoice) {
-                appState.wimHofVoice = voices.find(voice => 
-                    voice.lang.includes('es') && 
-                    (voice.name.toLowerCase().includes('male') || voice.name.toLowerCase().includes('hombre'))
-                ) || voices.find(voice => voice.lang.includes('es')) || voices[0];
+                appState.wimHofVoice = voices.find(voice => voice.lang.includes('es')) || voices[0];
             }
             
             if (voices.length === 0) {
@@ -1231,18 +1319,18 @@
             speechSynthesis.speak(utterance);
         }
 
-        // Speak text with meditation male voice
+        // Speak text with meditation voice (using browser's default TTS)
         function speakMeditation(text) {
             if (!appState.meditationVoiceEnabled) return;
             
-            if (meditationSpeech) {
-                speechSynthesis.cancel(meditationSpeech);
+            if (currentSpeech) {
+                speechSynthesis.cancel(currentSpeech);
             }
             
             const utterance = new SpeechSynthesisUtterance(text);
             
-            if (appState.meditationMaleVoice) {
-                utterance.voice = appState.meditationMaleVoice;
+            if (appState.meditationVoice) {
+                utterance.voice = appState.meditationVoice;
             }
             
             utterance.lang = 'es-ES';
@@ -1250,7 +1338,7 @@
             utterance.pitch = 0.9;
             utterance.volume = 1;
             
-            meditationSpeech = utterance;
+            currentSpeech = utterance;
             speechSynthesis.speak(utterance);
         }
 
@@ -1259,7 +1347,6 @@
             speechSynthesis.cancel();
             currentSpeech = null;
             wimHofSpeech = null;
-            meditationSpeech = null;
             appState.ttsActive = false;
             document.getElementById('stop-voice-btn').classList.add('hidden');
         }
@@ -1346,7 +1433,7 @@
                 restartMeditationGuide();
             });
             
-            // Voice control buttons
+            // Voice control buttons for breathing
             document.getElementById('toggle-breathing-voice').addEventListener('click', () => {
                 playClickSound();
                 appState.breathingVoiceEnabled = !appState.breathingVoiceEnabled;
@@ -1363,24 +1450,6 @@
             document.getElementById('test-breathing-voice').addEventListener('click', () => {
                 playClickSound();
                 testWimHofVoice();
-            });
-            
-            document.getElementById('toggle-meditation-voice').addEventListener('click', () => {
-                playClickSound();
-                appState.meditationVoiceEnabled = !appState.meditationVoiceEnabled;
-                const btn = document.getElementById('toggle-meditation-voice');
-                if (appState.meditationVoiceEnabled) {
-                    btn.innerHTML = '<i class="fas fa-microphone mr-2"></i> Voz Masculina Natural';
-                    btn.classList.add('active');
-                } else {
-                    btn.innerHTML = '<i class="fas fa-microphone-slash mr-2"></i> Voz Desactivada';
-                    btn.classList.remove('active');
-                }
-            });
-            
-            document.getElementById('test-meditation-voice').addEventListener('click', () => {
-                playClickSound();
-                testMeditationVoice();
             });
             
             // Save meditation button
@@ -1409,17 +1478,6 @@
                 saveJournalEntry();
             });
             
-            // Chat buttons
-            document.getElementById('send-message-btn').addEventListener('click', () => {
-                playClickSound();
-                sendMessage();
-            });
-            
-            document.getElementById('clear-chat-btn').addEventListener('click', () => {
-                playClickSound();
-                clearChat();
-            });
-            
             // AI Analysis button
             document.getElementById('ai-analysis-btn').addEventListener('click', () => {
                 playClickSound();
@@ -1439,12 +1497,31 @@
                 activateDetoxMode();
             });
             
-            // Enter key for chat
-            document.getElementById('user-message').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    document.getElementById('send-message-btn').click();
-                }
+            // Study buttons
+            document.getElementById('participate-study-btn').addEventListener('click', () => {
+                playClickSound();
+                openStudyForm();
+            });
+            
+            document.getElementById('open-study-form').addEventListener('click', () => {
+                playClickSound();
+                openStudyForm();
+            });
+            
+            document.getElementById('study-info').addEventListener('click', () => {
+                playClickSound();
+                showStudyInfo();
+            });
+            
+            document.getElementById('close-study-modal').addEventListener('click', () => {
+                playClickSound();
+                closeStudyModal();
+            });
+            
+            document.getElementById('go-to-study-form').addEventListener('click', () => {
+                playClickSound();
+                closeStudyModal();
+                openStudyForm();
             });
         }
 
@@ -1459,19 +1536,6 @@
             
             const randomText = testTexts[Math.floor(Math.random() * testTexts.length)];
             speakWimHof(randomText);
-        }
-
-        // Test meditation voice
-        function testMeditationVoice() {
-            const testTexts = [
-                "Bienvenido a esta meditación guiada",
-                "Encuentra una posición cómoda",
-                "Cierra suavemente los ojos",
-                "Observa tu respiración"
-            ];
-            
-            const randomText = testTexts[Math.floor(Math.random() * testTexts.length)];
-            speakMeditation(randomText);
         }
 
         // Set active mood with colors
@@ -1789,7 +1853,7 @@
             // Update timer display
             document.getElementById('current-step-text').textContent = `Paso ${appState.currentStep + 1} de ${appState.meditationSteps.length}`;
             
-            // Speak the step using male voice
+            // Speak the step using TTS
             speakMeditation(step.text);
             
             // Start step timer
@@ -2292,8 +2356,8 @@
             // Bonus for journal entries
             score += Math.min(appState.savedJournals.length * 2, 10);
             
-            // Bonus for chat engagement
-            if (appState.chatHistory.length > 2) score += 5;
+            // Bonus for study participation
+            if (appState.studyParticipation) score += 5;
             
             // Cap at 100
             score = Math.min(score, 100);
@@ -2451,6 +2515,15 @@
                 });
             }
             
+            // Study participation
+            if (appState.studyParticipation) {
+                analysis.push({
+                    title: "🔬 Contribuyendo a la Ciencia",
+                    content: "¡Gracias por participar en nuestro estudio! Tu contribución ayuda a avanzar en la investigación sobre bienestar digital.",
+                    color: "border-purple-400"
+                });
+            }
+            
             // General recommendation
             analysis.push({
                 title: "💡 Recomendación Personalizada",
@@ -2527,6 +2600,70 @@
             // Reset after 5 seconds
             setTimeout(() => {
                 document.getElementById('detox-status').innerHTML = '';
+            }, 5000);
+        }
+
+        // Open study form with the correct link
+        function openStudyForm() {
+            // Google Form URL con el PSS-10 en español - ENLACE CORRECTO
+            const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfQHrzz2OMyyutY6gCdDLHdFBa0PLrLLA9AeBdHYbqe8Y72xA/viewform?usp=dialog";
+            
+            // Abrir en nueva pestaña
+            window.open(googleFormUrl, '_blank');
+            
+            // Marcar participación en estudio
+            appState.studyParticipation = true;
+            saveUserData('study', true);
+            updateStudyBadge();
+            
+            // Mostrar mensaje de agradecimiento
+            showStudyThankYou();
+        }
+
+        // Show study info modal
+        function showStudyInfo() {
+            document.getElementById('study-modal').classList.remove('hidden');
+        }
+
+        // Close study modal
+        function closeStudyModal() {
+            document.getElementById('study-modal').classList.add('hidden');
+        }
+
+        // Update study badge
+        function updateStudyBadge() {
+            const studyBadge = document.getElementById('participate-study-btn');
+            if (appState.studyParticipation) {
+                studyBadge.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Participando en Estudio';
+                studyBadge.style.background = 'linear-gradient(135deg, #10b981 0%, #34d399 100%)';
+            }
+        }
+
+        // Show study thank you message
+        function showStudyThankYou() {
+            // Crear toast de agradecimiento
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm fade-in';
+            toast.innerHTML = `
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-heart text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h4 class="font-bold">¡Gracias por participar! 🙏</h4>
+                        <p class="text-sm mt-1">Tu contribución ayuda a avanzar en la investigación sobre bienestar digital. Recibirás un recordatorio en 4 semanas.</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Remover toast después de 5 segundos
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
             }, 5000);
         }
 
@@ -2664,206 +2801,6 @@
                     document.getElementById('journal-entry').value = '';
                     document.getElementById('journal-private').checked = false;
                 }
-            }
-        }
-
-        // Chat functions
-        function updateChatDisplay() {
-            const chatContainer = document.getElementById('chat-container');
-            chatContainer.innerHTML = '';
-            
-            appState.chatHistory.forEach(msg => {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `chat-message ${msg.role === 'user' ? 'user-message' : 'assistant-message neuro-message'}`;
-                messageDiv.innerHTML = `<strong>${msg.role === 'user' ? 'Tú' : 'Asistente IA'}:</strong> ${formatMessage(msg.content)}`;
-                chatContainer.appendChild(messageDiv);
-            });
-            
-            // Scroll to bottom
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-
-        function formatMessage(content) {
-            return content;
-        }
-
-        async function sendMessage() {
-            const messageInput = document.getElementById('user-message');
-            const message = messageInput.value.trim();
-            const loadingDiv = document.getElementById('ai-loading');
-            
-            if (!message) {
-                alert('Por favor, escribe un mensaje.');
-                return;
-            }
-            
-            // Add user message
-            appState.chatHistory.push({
-                role: 'user',
-                content: message
-            });
-            
-            updateChatDisplay();
-            
-            // Show loading
-            loadingDiv.classList.remove('hidden');
-            messageInput.disabled = true;
-            document.getElementById('send-message-btn').disabled = true;
-            
-            // Clear input
-            messageInput.value = '';
-            
-            try {
-                // Generate intelligent response
-                const response = await getIntelligentResponse(message);
-                
-                // Add AI response
-                appState.chatHistory.push({
-                    role: 'assistant',
-                    content: response
-                });
-                
-                updateChatDisplay();
-                
-                // Save chat history
-                saveUserData('chat', appState.chatHistory);
-                
-            } catch (error) {
-                console.error('Error con la IA:', error);
-                
-                // Fallback a respuestas locales inteligentes
-                const fallbackResponse = getFallbackResponse(message);
-                
-                appState.chatHistory.push({
-                    role: 'assistant',
-                    content: fallbackResponse
-                });
-                
-                updateChatDisplay();
-                
-                // Update model info
-                document.getElementById('chat-model-info').textContent = 'Usando respuestas locales mejoradas';
-            }
-            
-            // Hide loading
-            loadingDiv.classList.add('hidden');
-            messageInput.disabled = false;
-            document.getElementById('send-message-btn').disabled = false;
-            
-            // Play success sound
-            playSuccessSound();
-        }
-
-        async function getIntelligentResponse(message) {
-            // Analizar el mensaje
-            const lowerMessage = message.toLowerCase();
-            
-            // Detectar emociones
-            const emotions = detectEmotions(lowerMessage);
-            
-            // Generar respuesta basada en análisis
-            return generateContextualResponse(message, emotions);
-        }
-
-        function detectEmotions(message) {
-            const emotions = [];
-            const emotionKeywords = {
-                'feliz': ['feliz', 'contento', 'alegre', 'emocionado'],
-                'triste': ['triste', 'deprimido', 'desanimado', 'melancólico'],
-                'ansioso': ['ansioso', 'nervioso', 'preocupado', 'agitado'],
-                'estresado': ['estresado', 'agobiado', 'presionado'],
-                'enfadado': ['enfadado', 'enojado', 'frustrado', 'irritado'],
-                'calmado': ['calmado', 'tranquilo', 'relajado', 'pacífico']
-            };
-            
-            for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
-                if (keywords.some(keyword => message.includes(keyword))) {
-                    emotions.push(emotion);
-                }
-            }
-            
-            return emotions;
-        }
-
-        function generateContextualResponse(message, emotions) {
-            if (emotions.length > 0) {
-                const emotion = emotions[0];
-                const emotionResponses = {
-                    'feliz': `Me alegra mucho que te sientas ${emotion}. ¿Quieres compartir qué está contribuyendo a esta buena energía? Podrías aprovechar este estado para practicar alguna actividad que disfrutes.`,
-                    'triste': `Entiendo que te sientas ${emotion}. La tristeza es una emoción válida y necesaria. ¿Te gustaría hablar más sobre lo que te hace sentir así? Podría sugerirte la meditación para el ánimo bajo.`,
-                    'ansioso': `Veo que estás sintiendo ${emotion}. La ansiedad puede ser abrumadora, pero hay formas de manejarla. ¿Has probado el ejercicio de respiración con el globo? Podría ayudarte a calmarte.`,
-                    'estresado': `El ${emotion} es común en nuestro ritmo de vida. Te sugiero probar la desconexión digital o una meditación de relajación. ¿Qué te está causando más estrés actualmente?`,
-                    'enfadado': `La ${emotion} es una emoción protectora. Identificar qué la desencadena puede ayudar. ¿Quieres explorar eso juntos? Podrías probar escribir en tu diario sobre ello.`,
-                    'calmado': `Qué bien que te sientas ${emotion}. Este es un estado ideal para la práctica de mindfulness. ¿Te gustaría intentar una meditación de concentración?`
-                };
-                
-                if (emotionResponses[emotion]) {
-                    return emotionResponses[emotion];
-                }
-            }
-            
-            // Respuesta general empática
-            const empatheticResponses = [
-                'Gracias por compartir eso conmigo. Me ayuda a entender mejor cómo puedo apoyarte.',
-                'Escucho lo que dices y valido lo que sientes. ¿Hay algo específico en lo que te gustaría que te ayude hoy?',
-                'Me haces reflexionar sobre lo complejas que pueden ser nuestras experiencias emocionales. ¿Quieres seguir explorando esto?',
-                'Aprecio tu confianza al compartir esto. Como asistente de bienestar, te recuerdo que estoy aquí para apoyarte.',
-                'Cada persona tiene su propio ritmo en el camino del bienestar emocional. ¿Cómo sientes que va el tuyo?',
-                'La autocompasión es clave en momentos así. ¿Has sido amable contigo mismo hoy?',
-                'A veces, el simple hecho de ser escuchado puede hacer una gran diferencia. Estoy aquí para eso.',
-                'Tu bienestar emocional es un viaje, no un destino. Celebro cada paso que das.'
-            ];
-            
-            return empatheticResponses[Math.floor(Math.random() * empatheticResponses.length)];
-        }
-
-        function getFallbackResponse(message) {
-            const lowerMessage = message.toLowerCase();
-            
-            // Respuesta emocionalmente inteligente
-            const emotionalWords = {
-                'triste': 'Entiendo que te sientas así. La tristeza es una emoción válida y natural. ¿Quieres hablar más sobre lo que te hace sentir así?',
-                'ansioso': 'La ansiedad puede ser difícil de manejar. Te sugiero probar el ejercicio de respiración o la meditación para ansiedad. ¿Te gustaría que te guíe?',
-                'estresado': 'El estrés acumulado puede ser agotador. Recuerda tomarte pausas breves durante el día. ¿Qué te está causando más estrés actualmente?',
-                'feliz': '¡Qué maravilloso! Celebrar los momentos felices es tan importante como procesar los difíciles. ¿Quieres compartir qué te hace sentir así?',
-                'solo': 'A veces nos sentimos solos incluso rodeados de gente. Estoy aquí para ti. ¿Hay alguien con quien podrías conectarte hoy?',
-                'confundido': 'La confusión es parte del proceso de crecimiento. A veces, escribir en el diario ayuda a clarificar pensamientos. ¿Has intentado eso?',
-                'cansado': 'El agotamiento puede ser físico, mental o emocional. Es importante descansar. ¿Has dormido bien últimamente?',
-                'enfadado': 'La ira es una emoción protectora. Identificar qué la desencadena puede ayudar a manejarla. ¿Quieres explorar eso juntos?'
-            };
-            
-            for (const [word, response] of Object.entries(emotionalWords)) {
-                if (lowerMessage.includes(word)) {
-                    return response;
-                }
-            }
-            
-            // Respuesta general empática
-            const empatheticResponses = [
-                'Gracias por compartir eso conmigo. Cada experiencia que compartes me ayuda a entender mejor cómo acompañarte en tu camino de bienestar.',
-                'Valoro tu honestidad al expresar lo que sientes. El autoconocimiento emocional es un paso importante hacia el equilibrio interno.',
-                'Me haces reflexionar sobre la complejidad de nuestras experiencias humanas. ¿Hay algún aspecto específico de lo que compartes que te gustaría explorar más?',
-                'Aprecio que confíes en mí con tus pensamientos. Como tu asistente de bienestar, mi propósito es ofrecerte un espacio seguro para la expresión emocional.',
-                'Cada persona tiene su propio ritmo en el proceso de autodescubrimiento emocional. No hay prisa, solo presencia en el camino.'
-            ];
-            
-            return empatheticResponses[Math.floor(Math.random() * empatheticResponses.length)];
-        }
-
-        function clearChat() {
-            if (confirm('¿Estás seguro de que quieres limpiar toda la conversación?')) {
-                appState.chatHistory = [{
-                    role: 'assistant',
-                    content: '¡Hola! 👋 Soy tu asistente de bienestar emocional. Estoy aquí para escucharte, entenderte y acompañarte en tu día. Puedes contarme cómo te sientes, qué te preocupa, qué te gusta hacer, o simplemente conversar. ¿Cómo te sientes hoy?'
-                }];
-                
-                updateChatDisplay();
-                saveUserData('chat', appState.chatHistory);
-                
-                // Reset model info
-                document.getElementById('chat-model-info').textContent = 'Chat inteligente con análisis emocional';
-                
-                playSuccessSound();
             }
         }
 
